@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 
+import net.minecraft.server.Material;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -130,11 +132,13 @@ public class Cinema extends JavaPlugin{
 				for(int xx = minx;xx<=maxx;xx++){
 					for(int yy = miny;yy<=maxy;yy++){
 						for(int zz = minz;zz<=maxz;zz++){
-							raf.writeInt(xx-pos1.getBlockX());
-							raf.writeInt(yy-pos1.getBlockY());
-							raf.writeInt(zz-pos1.getBlockZ());
-							raf.writeInt(w.getBlockAt(xx, yy, zz).getType().getId());
-							raf.writeByte(w.getBlockAt(xx, yy, zz).getData());
+							if(saveair || !w.getBlockAt(xx, yy, zz).getType().equals(Material.AIR)){
+								raf.writeInt(xx-pos1.getBlockX());
+								raf.writeInt(yy-pos1.getBlockY());
+								raf.writeInt(zz-pos1.getBlockZ());
+								raf.writeInt(w.getBlockAt(xx, yy, zz).getType().getId());
+								raf.writeByte(w.getBlockAt(xx, yy, zz).getData());
+							}
 						}	
 					}
 				}

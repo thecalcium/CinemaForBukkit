@@ -23,14 +23,9 @@ public class Frame {
 	public void Draw(boolean setAir){
 		for(int i = 0; i < mba.length; i++){
 			Block b = w.getBlockAt(mba[i].x+x, mba[i].y+y, mba[i].z+z);
-			if(setAir){
+			if(setAir || !mba[i].m.equals(Material.AIR)){
 				b.setType(mba[i].m);
 				b.setData(mba[i].data);
-			}else{
-				if(mba[i].m.equals(Material.AIR)){
-					b.setType(mba[i].m);
-					b.setData(mba[i].data);
-				}
 			}
 		}
 	}
