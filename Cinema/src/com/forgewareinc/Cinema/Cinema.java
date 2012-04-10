@@ -47,10 +47,13 @@ public class Cinema extends JavaPlugin{
 				}else{
 					return false;
 				}
+				sender.sendMessage("Pos1 set");
 				return true;
 			}else{
 				if(args.length == 4){
 					pos1 = new Location(Bukkit.getWorld(args[3]), Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+					sender.sendMessage("Pos1 set");
+					return true;
 				}else{
 					return false;
 				}
@@ -67,10 +70,13 @@ public class Cinema extends JavaPlugin{
 				}else{
 					return false;
 				}
+				sender.sendMessage("Pos2 set");
 				return true;
 			}else{
 				if(args.length == 4){
 					pos2 = new Location(Bukkit.getWorld(args[3]), Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+					sender.sendMessage("Pos2 set");
+					return true;
 				}else{
 					return false;
 				}
@@ -97,24 +103,20 @@ public class Cinema extends JavaPlugin{
 			}
 			try {
 				File file = new File(args[0]);
-				RandomAccessFile raf;
+				
 				if(!file.exists()){
 					//create file
 					file.createNewFile();
-					raf = new RandomAccessFile(args[0],"w");
-					raf.writeInt(0);
-					raf.close();
+					RandomAccessFile raf2 = new RandomAccessFile(args[0],"rw");
+					raf2.writeInt(0);
+					raf2.close();
+					raf2 = null;
 				}
-				raf = new RandomAccessFile(args[0],"rw");
+				RandomAccessFile raf = new RandomAccessFile(args[0],"rw");
 				int framecount = raf.readInt()+1;
 				raf.seek(0);//increment framecount and write back
-				raf.write(framecount);
+				raf.writeInt(framecount);
 				raf.seek(raf.length());//jump to end of file
-				/*for(int i =0; i<framecount;i++){
-					//read through frames, overread them
-					int blocks = raf.readInt();
-					raf.seek(raf.getFilePointer()+blocks*16);//one block 16 bytes
-				}*/
 				//write all blocks of this frame
 				int minx = Math.min(pos1.getBlockX(), pos2.getBlockX());
 				int miny = Math.min(pos1.getBlockY(), pos2.getBlockY());
@@ -122,19 +124,22 @@ public class Cinema extends JavaPlugin{
 				int maxx = Math.max(pos1.getBlockX(), pos2.getBlockX());
 				int maxy = Math.max(pos1.getBlockY(), pos2.getBlockY());
 				int maxz = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
-				int blockcount = (maxx-minx)*(maxy-miny)*(maxz-minz);
-				raf.write(blockcount);
-				for(int xx = minx;xx<maxx;xx++){
-					for(int yy = miny;yy<maxy;yy++){
-						for(int zz = minz;zz<maxz;zz++){
-							raf.write(xx-pos1.getBlockX());
-							raf.write(yy-pos1.getBlockY());
-							raf.write(zz-pos1.getBlockZ());
-							raf.write(w.getBlockAt(xx, yy, zz).getType().getId());
+				int blockcount = (maxx-minx+1)*(maxy-miny+1)*(maxz-minz+1);
+				sender.sendMessage(blockcount + " blocks");
+				raf.writeInt(blockcount);
+				for(int xx = minx;xx<=maxx;xx++){
+					for(int yy = miny;yy<=maxy;yy++){
+						for(int zz = minz;zz<=maxz;zz++){
+							raf.writeInt(xx-pos1.getBlockX());
+							raf.writeInt(yy-pos1.getBlockY());
+							raf.writeInt(zz-pos1.getBlockZ());
+							raf.writeInt(w.getBlockAt(xx, yy, zz).getType().getId());
+							raf.writeByte(w.getBlockAt(xx, yy, zz).getData());
 						}	
 					}
 				}
 				raf.close();
+				sender.sendMessage("frame saved as frame number " + framecount);
 			} catch (FileNotFoundException e) {
 				sender.sendMessage("File not found");
 				return true;
@@ -143,6 +148,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("Some IOException occured. maybe you dont have write access?");
 				return true;
 			}
+			return true;
 		}
 		//cplay playername filename 0/1setair framedurationInMillis <world as console>
 		else if(cmd.getName().equalsIgnoreCase("cplay")){
@@ -155,7 +161,7 @@ public class Cinema extends JavaPlugin{
 				if(!players.containsKey(args[0])){
 					try {
 						boolean setair = args[2].equalsIgnoreCase("1");						
-						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, ((Player)sender).getWorld()));
+						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, ((Player)sender).getWorld(),sender));
 					} catch(FileNotFoundException e){
 						sender.sendMessage("File not found");
 					} catch (IOException e) {
@@ -170,7 +176,7 @@ public class Cinema extends JavaPlugin{
 				if(!players.containsKey(args[0])){
 					try {
 						boolean setair = args[2].equalsIgnoreCase("1");						
-						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, Bukkit.getWorld(args[4])));
+						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, Bukkit.getWorld(args[4]),sender));
 					} catch(FileNotFoundException e){
 						sender.sendMessage("File not found");
 					} catch (IOException e) {
@@ -187,12 +193,19 @@ public class Cinema extends JavaPlugin{
 		}
 		//cstop playername
 		else if(cmd.getName().equalsIgnoreCase("cstop")){
-			if(players.containsKey(args[0])){
+			if(args.length == 1 && players.containsKey(args[0])){
 				players.get(args[0]).stop();
+				players.remove(args[0]);
 				sender.sendMessage("Player stopped");
+				return true;
 			}else{
 				sender.sendMessage("Player doesnt exist");
+				return true;
 			}
+		}
+		else if(cmd.getName().equalsIgnoreCase("cinfo")){
+			sender.sendMessage(pos1.getBlockX() + " "+pos1.getBlockY() + " "+ pos1.getBlockZ());
+			sender.sendMessage(pos2.getBlockX() + " "+pos2.getBlockY() + " "+ pos2.getBlockZ());
 		}
 		return false; 
 	}

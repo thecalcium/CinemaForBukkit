@@ -1,5 +1,5 @@
 name: Cinema
-main: net.forgewareinc.Cinema.Cinema
+main: com.forgewareinc.Cinema.Cinema
 version: 1.0
 commands:
    csaveair:
@@ -20,3 +20,6 @@ commands:
    cstop:
       description: Stops the given cinemaplayer. you cant pause it and then rerun it cause the java Timer sucks (yeah i write that in a description!!)
       usage: /cstop <playername>
+   cinfo:
+      description: shows pos1 and pos2
+      usage: /cinfo

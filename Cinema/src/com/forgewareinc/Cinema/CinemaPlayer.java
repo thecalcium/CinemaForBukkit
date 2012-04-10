@@ -5,6 +5,7 @@ import java.io.RandomAccessFile;
 import java.util.*;
 
 import org.bukkit.*;
+import org.bukkit.command.CommandSender;
 
 public class CinemaPlayer extends TimerTask {
 
@@ -12,7 +13,7 @@ public class CinemaPlayer extends TimerTask {
 	int frameCount;
 	Frame[] fa;
 	Timer t;
-	public CinemaPlayer(String filePath, boolean setAir,int frameTime, Location loc, World w) throws IOException{
+	public CinemaPlayer(String filePath, boolean setAir,int frameTime, Location loc, World w, CommandSender sender) throws IOException{
 		this.setAir = setAir;
 		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
 		
@@ -22,16 +23,17 @@ public class CinemaPlayer extends TimerTask {
 			int blocks = raf.readInt();
 			myBlock[] mba = new myBlock[blocks];
 			for(int b = 0; b < blocks;b++){
-				int x = raf.readInt()+loc.getBlockX();
+				int x = raf.readInt();
 				int y = raf.readInt();
 				int z = raf.readInt();
-				mba[b] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()));
+				mba[b] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 			}
 			fa[i]= new Frame(mba,w,loc);
 		}
 		raf.close();
 		t = new Timer();
 		t.schedule(this, 0, frameTime);
+		sender.sendMessage("player loaded with " + frameCount + " Frames");
 	}
 	
 	int nowframe=0;
