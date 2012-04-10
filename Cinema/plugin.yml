@@ -1,0 +1,22 @@
+name: Cinema
+main: net.forgewareinc.Cinema.Cinema
+version: 1.0
+commands:
+   csaveair:
+      description: If set to one, air blocks will be saved to a frame, otherwise not
+      usage: /csaveair <1/0>
+   cpos1:
+      description: Sets the first position to the position of the player, or to the given x, y and z. If used by console you have to specify the world too
+      usage: /cpos1 [x] [y] [z] [[worldname if console]]
+   cpos2:
+      description: Sets the second position to the position of the player, or to the given x, y and z. If used by console you have to specify the world too
+      usage: /cpos2 [x] [y] [z] [[worldname if console]]
+   csave:
+      description: Saves the frame marked by the two positions to the given file. If file does not exist it will be created. If used by console you have to specify the world too
+      usage: /csave <filename> [[worldname if console]]
+   cplay:
+      description: Plays the given file as cinema. it plays under the playername (so u can use multiple cinemas). if you set setair to 0 stored airblocks will not be set each frame(if you build a block somewhere it will not be overwritten by an airblock). frame duration in milliseconds is the amount of time between each framechange. dont set it too low. could result in serverlags and major cpu usage. If used by console you have to specify the world too
+      usage: /cplay <playername> <filename> <setair 0/1> <framedurationInMillis> [[worldname if console]]
+   cstop:
+      description: Stops the given cinemaplayer. you cant pause it and then rerun it cause the java Timer sucks (yeah i write that in a description!!)
+      usage: /cstop <playername>
