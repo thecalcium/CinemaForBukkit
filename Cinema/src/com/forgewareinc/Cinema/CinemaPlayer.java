@@ -16,7 +16,7 @@ public class CinemaPlayer extends TimerTask {
 	Cinema c;
 	String name;
 	UndoMaker um;
-	public CinemaPlayer(String name, String filePath, boolean setAir,int playCount,boolean restoreafterstop,int frameTime, Location loc, World w, CommandSender sender,Cinema c) throws IOException{
+	public CinemaPlayer(String name, String filePath, boolean setAir,int playCount,boolean restoreafterstop,int frameTime, Location loc, CommandSender sender,Cinema c) throws IOException{
 		this.setAir = setAir;
 		this.restoreafterstop = restoreafterstop;
 		this.playCount = playCount;
@@ -24,7 +24,7 @@ public class CinemaPlayer extends TimerTask {
 		this.name = name;
 		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
 		um = new UndoMaker();
-		um.w = w;
+		um.w = loc.getWorld();
 		
 		frameCount = raf.readInt();//how much frames?
 		fa = new Frame[frameCount];
@@ -38,11 +38,11 @@ public class CinemaPlayer extends TimerTask {
 				int x = raf.readInt()+xx;
 				int y = raf.readInt()+yy;
 				int z = raf.readInt()+zz;
-				um.AddmyBlock(new myBlock(w.getBlockAt(x, y, z)));
+				um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
 				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				mba[b] = mb;
 			}
-			fa[i]= new Frame(mba,w);
+			fa[i]= new Frame(mba,um.w);
 		}
 		raf.close();
 		raf = null;

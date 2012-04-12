@@ -161,19 +161,19 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("Positions were not set. cant continue");
 				return true;
 			}
-			World w;
+			/*World w;
 			if(sender instanceof Player && args.length == 6){
 				w = ((Player)sender).getWorld();
 			}else if(args.length==7){
 				w = Bukkit.getWorld(args[6]);
 			}else{
 				return false;
-			}
+			}*/
 			if(!players.containsKey(args[0])){
 				try {
 					boolean setair = args[2].equalsIgnoreCase("1");
 					boolean restoreafterstop = args[4].equalsIgnoreCase("1");
-					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, Integer.parseInt(args[3]), restoreafterstop, Integer.parseInt(args[5]), pos1, w,sender,this));
+					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, Integer.parseInt(args[3]), restoreafterstop, Integer.parseInt(args[5]), pos1,sender,this));
 				} catch(FileNotFoundException e){
 					sender.sendMessage("File not found");
 				} catch (IOException e) {
