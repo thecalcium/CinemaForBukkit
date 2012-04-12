@@ -84,7 +84,7 @@ public class Cinema extends JavaPlugin{
 				}
 			}
 		}
-		//csave filename <worldname if console>
+		//csave filename
 		else if(cmd.getName().equalsIgnoreCase("csave")){
 			if(pos1 == null || pos2 == null)
 			{
@@ -198,10 +198,10 @@ public class Cinema extends JavaPlugin{
 		}
 		else if(cmd.getName().equalsIgnoreCase("cinfo")){
 			if(pos1 != null){
-				sender.sendMessage(pos1.getBlockX() + " "+pos1.getBlockY() + " "+ pos1.getBlockZ());
+				sender.sendMessage("pos1: " + pos1.getBlockX() + " "+pos1.getBlockY() + " "+ pos1.getBlockZ());
 			}
 			if(pos2 != null){
-				sender.sendMessage(pos2.getBlockX() + " "+pos2.getBlockY() + " "+ pos2.getBlockZ());
+				sender.sendMessage("pos2: " + pos2.getBlockX() + " "+pos2.getBlockY() + " "+ pos2.getBlockZ());
 			}
 		}
 		return false; 
