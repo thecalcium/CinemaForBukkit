@@ -154,45 +154,35 @@ public class Cinema extends JavaPlugin{
 			}
 			return true;
 		}
-		//cplay playername filename 0/1setair framedurationInMillis <world as console>
+		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis <world>
 		else if(cmd.getName().equalsIgnoreCase("cplay")){
 			if(pos1 == null)
 			{
 				sender.sendMessage("Positions were not set. cant continue");
 				return true;
 			}
-			if(sender instanceof Player && args.length==4){
-				if(!players.containsKey(args[0])){
-					try {
-						boolean setair = args[2].equalsIgnoreCase("1");						
-						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, ((Player)sender).getWorld(),sender));
-					} catch(FileNotFoundException e){
-						sender.sendMessage("File not found");
-					} catch (IOException e) {
-						sender.sendMessage("Some IOException occured. maybe the file is corrupted?");
-					}
-					return true;
-				}else{
-					sender.sendMessage("Player already in use");
-					return true;
-				}
-			}else if(args.length==5){
-				if(!players.containsKey(args[0])){
-					try {
-						boolean setair = args[2].equalsIgnoreCase("1");						
-						players.put(args[0], new CinemaPlayer(args[1], setair, Integer.parseInt(args[3]), pos1, Bukkit.getWorld(args[4]),sender));
-					} catch(FileNotFoundException e){
-						sender.sendMessage("File not found");
-					} catch (IOException e) {
-						sender.sendMessage("Some IOException occured. maybe the file is corrupted?");
-					}
-					return true;
-				}else{
-					sender.sendMessage("Player already in use");
-					return true;
-				}
+			World w;
+			if(sender instanceof Player && args.length == 6){
+				w = ((Player)sender).getWorld();
+			}else if(args.length==7){
+				w = Bukkit.getWorld(args[6]);
 			}else{
 				return false;
+			}
+			if(!players.containsKey(args[0])){
+				try {
+					boolean setair = args[2].equalsIgnoreCase("1");
+					boolean restoreafterstop = args[4].equalsIgnoreCase("1");
+					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, Integer.parseInt(args[3]), restoreafterstop, Integer.parseInt(args[5]), pos1, w,sender,this));
+				} catch(FileNotFoundException e){
+					sender.sendMessage("File not found");
+				} catch (IOException e) {
+					sender.sendMessage("Some IOException occured. maybe the file is corrupted?");
+				}
+				return true;
+			}else{
+				sender.sendMessage("Player already in use");
+				return true;
 			}
 		}
 		//cstop playername

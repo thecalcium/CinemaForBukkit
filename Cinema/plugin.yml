@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.0
+version: 1.1
 commands:
    csaveair:
       description: If set to one, air blocks will be saved to a frame, otherwise not
@@ -16,7 +16,7 @@ commands:
       usage: /csave <filename> [[worldname if console]]
    cplay:
       description: Plays the given file as cinema. it plays under the playername (so u can use multiple cinemas). if you set setair to 0 stored airblocks will not be set each frame(if you build a block somewhere it will not be overwritten by an airblock). frame duration in milliseconds is the amount of time between each framechange. dont set it too low. could result in serverlags and major cpu usage. If used by console you have to specify the world too
-      usage: /cplay <playername> <filename> <setair 0/1> <framedurationInMillis> [[worldname if console]]
+      usage: /cplay <playername> <filename> <setair 0/1> <playcount> <restore after stop 0/1> <framedurationInMillis> [[worldname if console]]
    cstop:
       description: Stops the given cinemaplayer. you cant pause it and then rerun it cause the java Timer sucks (yeah i write that in a description!!)
       usage: /cstop <playername>
