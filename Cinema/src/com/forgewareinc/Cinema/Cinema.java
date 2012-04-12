@@ -91,17 +91,13 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("Positions were not set. cant continue");
 				return true;
 			}
-			World w = null;
-			if(sender instanceof Player){
-				if(args.length != 1){
-					return false;
-				}
-				w = ((Player)sender).getWorld();
-			}else{
-				if(args.length != 2){
-					return false;
-				}
-				w = Bukkit.getWorld(args[1]);
+			World w = pos1.getWorld();
+			if(args.length != 1){
+				return false;
+			}
+			if(pos1.getWorld() != pos2.getWorld()){
+				sender.sendMessage("both positions have to be in the same world");
+				return true;
 			}
 			try {
 				File file = new File(args[0]);
@@ -154,7 +150,7 @@ public class Cinema extends JavaPlugin{
 			}
 			return true;
 		}
-		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis <world>
+		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis
 		else if(cmd.getName().equalsIgnoreCase("cplay")){
 			if(pos1 == null)
 			{
@@ -169,6 +165,9 @@ public class Cinema extends JavaPlugin{
 			}else{
 				return false;
 			}*/
+			if(args.length!=6){
+				return false;
+			}
 			if(!players.containsKey(args[0])){
 				try {
 					boolean setair = args[2].equalsIgnoreCase("1");
