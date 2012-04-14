@@ -1,10 +1,8 @@
 package com.forgewareinc.Cinema;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import net.minecraft.server.Material;
 
@@ -18,10 +16,77 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Cinema extends JavaPlugin{
 
+	public static final String configPath = "plugins/cinema.cfg";
+
+	Logger log;
+	
+	public void onEnable(){ 
+		log = this.getLogger();
+		FileInputStream fstream = null;
+		try {
+			fstream = new FileInputStream(configPath);
+		} catch (FileNotFoundException e) {
+			log.info("Cinema config not found. generating...");
+			//generate file
+			File temp = new File(configPath);
+			try {temp.createNewFile();} catch (IOException e1) {/*cant create file*/ log.info("cant create new cinema config file. using defaults");return; }
+			PrintWriter pw = null;
+			try {pw = new PrintWriter(new FileOutputStream(configPath));} catch (FileNotFoundException e1) {/*cant happen*/}
+			pw.println("setair=" + defaultSetAir);
+			pw.println("playcount=" + defaultPlayCount);
+			pw.println("restoreafterstop=" + defaultRestoreAfterStop);
+			pw.println("frameduration=" + defaultFrameDuration);
+			pw.close();
+			try {fstream = new FileInputStream(configPath);} catch (FileNotFoundException e1) {/*cant happen*/}
+			log.info("generated new Ciname config file");
+		}
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		while(true){
+			try {
+				String[] sa = br.readLine().split("=");
+				if(sa.length!=2){continue;}
+				if(sa[0].equalsIgnoreCase("setair")){
+					defaultSetAir = Boolean.parseBoolean(sa[1]);
+				}
+				else if(sa[0].equalsIgnoreCase("playcount")){
+					defaultPlayCount = Integer.parseInt(sa[1]);
+				}
+				else if(sa[0].equalsIgnoreCase("setair")){
+					defaultRestoreAfterStop = Boolean.parseBoolean(sa[1]);
+				}
+				else if(sa[0].equalsIgnoreCase("setair")){
+					defaultFrameDuration = Integer.parseInt(sa[1]);
+				}
+			} catch (IOException e) {
+				break;
+			}catch (NullPointerException e) {
+				break;
+			}
+		}
+		try {
+			br.close();
+		} catch (IOException e) {
+		}
+	}
+	
+	// default params for cplay
+	boolean defaultSetAir = true;
+	int defaultPlayCount = 0;
+	boolean defaultRestoreAfterStop = true;
+	int defaultFrameDuration = 75;
+			
+	//normal stuff
 	boolean saveair = true;
 	public HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
 	Location pos1=null,pos2=null;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		if(sender instanceof Player){
+			if(!sender.hasPermission("Cinema.cinema")){
+				sender.sendMessage("you dont have permission to use this plugin");
+				return true;
+			}
+		}
 		//csaveair <0/1>
 		if(cmd.getName().equalsIgnoreCase("csaveair")){
 			if(args.length!=1){
@@ -154,25 +219,25 @@ public class Cinema extends JavaPlugin{
 		else if(cmd.getName().equalsIgnoreCase("cplay")){
 			if(pos1 == null)
 			{
-				sender.sendMessage("Positions were not set. cant continue");
+				sender.sendMessage("Position1 not set. cant continue");
 				return true;
 			}
-			/*World w;
-			if(sender instanceof Player && args.length == 6){
-				w = ((Player)sender).getWorld();
-			}else if(args.length==7){
-				w = Bukkit.getWorld(args[6]);
-			}else{
-				return false;
-			}*/
-			if(args.length!=6){
+			if(args.length > 6 || args.length < 2){
 				return false;
 			}
+			boolean setair = defaultSetAir;
+			boolean restoreafterstop = defaultRestoreAfterStop;
+			int playcount = defaultPlayCount;
+			int frameduration = defaultFrameDuration;
+			if(args.length == 6){
+				setair = args[2].equalsIgnoreCase("1");
+				playcount = Integer.parseInt(args[3]);
+				restoreafterstop = args[4].equalsIgnoreCase("1");
+				frameduration = Integer.parseInt(args[5]);
+			}
 			if(!players.containsKey(args[0])){
-				try {
-					boolean setair = args[2].equalsIgnoreCase("1");
-					boolean restoreafterstop = args[4].equalsIgnoreCase("1");
-					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, Integer.parseInt(args[3]), restoreafterstop, Integer.parseInt(args[5]), pos1,sender,this));
+				try {;
+					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
 				} catch(FileNotFoundException e){
 					sender.sendMessage("File not found");
 				} catch (IOException e) {
@@ -196,13 +261,19 @@ public class Cinema extends JavaPlugin{
 				return true;
 			}
 		}
+		//cinfo
 		else if(cmd.getName().equalsIgnoreCase("cinfo")){
 			if(pos1 != null){
 				sender.sendMessage("pos1: " + pos1.getBlockX() + " "+pos1.getBlockY() + " "+ pos1.getBlockZ());
+			}else{
+				sender.sendMessage("pos1 not set");
 			}
 			if(pos2 != null){
 				sender.sendMessage("pos2: " + pos2.getBlockX() + " "+pos2.getBlockY() + " "+ pos2.getBlockZ());
+			}else{
+				sender.sendMessage("pos2 not set");
 			}
+			return true;
 		}
 		return false; 
 	}

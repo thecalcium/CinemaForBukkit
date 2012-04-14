@@ -1,25 +1,43 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.1
+version: 1.2
+permissions:
+   Cinema.basic:
+      description: gives access to the cinema plugin
+      default: op
 commands:
    csaveair:
       description: If set to one, air blocks will be saved to a frame, otherwise not
       usage: /csaveair <1/0>
+      permission: Cinema.basic
+      permission-message: You don't have permission
    cpos1:
       description: Sets the first position to the position of the player, or to the given x, y and z. If used by console you have to specify the world too
       usage: /cpos1 [x] [y] [z] [[worldname if console]]
+      permission: Cinema.basic
+      permission-message: You don't have permission
    cpos2:
       description: Sets the second position to the position of the player, or to the given x, y and z. If used by console you have to specify the world too
       usage: /cpos2 [x] [y] [z] [[worldname if console]]
+      permission: Cinema.basic
+      permission-message: You don't have permission
    csave:
       description: Saves the frame marked by the two positions to the given file. If file does not exist it will be created. If used by console you have to specify the world too
       usage: /csave <filename> [[worldname if console]]
+      permission: Cinema.basic
+      permission-message: You don't have permission
    cplay:
-      description: Plays the given file. it plays under the ID (so u can use multiple cinemas). if you set setair to 0 stored airblocks will not be set each frame(if you build a block somewhere it will not be overwritten by an airblock). frame duration in milliseconds is the amount of time between each framechange. dont set it too low. could result in serverlags and major cpu usage.
-      usage: /cplay <ID> <filename> <setair 0/1> <playcount> <restore after stop 0/1> <framedurationInMillis>
+      description: Plays the given file. it plays under the ID (so u can use multiple cinemas). if you set setair to 0 stored airblocks will not be set each frame(if you build a block somewhere it will not be overwritten by an airblock). frame duration in milliseconds is the amount of time between each framechange. dont set it too low. could result in serverlags and major cpu usage. the block in {} is optional. it is just used if the 4 numbers are given. not if only 3 or 2 or 1
+      usage: /cplay <ID> <filename> {[setair 0/1] [playcount] [restore after stop 0/1] [framedurationInMillis]}
+      permission: Cinema.basic
+      permission-message: You don't have permission
    cstop:
       description: Stops the given cinemaplayer(ID you gave at cplay). you cant pause it and then rerun it cause the java Timer sucks (yeah i write that in a description!!)
       usage: /cstop <ID>
+      permission: Cinema.basic
+      permission-message: You don't have permission
    cinfo:
       description: shows pos1 and pos2
       usage: /cinfo
+      permission: Cinema.basic
+      permission-message: You don't have permission
