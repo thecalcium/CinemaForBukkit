@@ -1,7 +1,6 @@
 package com.forgewareinc.Cinema;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.*;
 
 import org.bukkit.*;
@@ -9,46 +8,22 @@ import org.bukkit.command.CommandSender;
 
 public class CinemaPlayer extends TimerTask {
 
-	boolean setAir=true,restoreafterstop=true;
-	int frameCount,playCount;
-	Frame[] fa;
+	boolean setAir=true;
+	int playCount;
 	Timer t;
 	Cinema c;
 	String name;
-	UndoMaker um;
+	CinemaFile cf;
 	public CinemaPlayer(String name, String filePath, boolean setAir,int playCount,boolean restoreafterstop,int frameTime, Location loc, CommandSender sender,Cinema c) throws IOException{
 		this.setAir = setAir;
-		this.restoreafterstop = restoreafterstop;
 		this.playCount = playCount;
 		this.c = c;
 		this.name = name;
-		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
-		um = new UndoMaker();
-		um.w = loc.getWorld();
 		
-		frameCount = raf.readInt();//how much frames?
-		fa = new Frame[frameCount];
-		int xx = loc.getBlockX();
-		int yy = loc.getBlockY();
-		int zz = loc.getBlockZ();
-		for(int i = 0; i < frameCount; i++){
-			int blocks = raf.readInt();
-			myBlock[] mba = new myBlock[blocks];
-			for(int b = 0; b < blocks;b++){
-				int x = raf.readInt()+xx;
-				int y = raf.readInt()+yy;
-				int z = raf.readInt()+zz;
-				um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
-				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
-				mba[b] = mb;
-			}
-			fa[i]= new Frame(mba,um.w);
-		}
-		raf.close();
-		raf = null;
+		cf = new CinemaFile(filePath, loc, setAir,restoreafterstop,false);
 		t = new Timer();
 		t.schedule(this, 0, frameTime);
-		sender.sendMessage("player loaded with " + frameCount + " Frames");
+		sender.sendMessage("Player loaded with " + cf.frameCount + " Frames");
 	}
 	
 	int nowframe=0;
@@ -56,23 +31,23 @@ public class CinemaPlayer extends TimerTask {
 	
 	@Override
 	public void run() {
-		atend = false;
-		fa[nowframe].Draw(setAir);
+		atEnd = false;
+		cf.fa[nowframe].Draw(setAir);
 		nowframe++;
-		if(nowframe >= frameCount){
+		if(nowframe >= cf.frameCount){
 			nowframe = 0;
 		}
-		atend = true;
+		atEnd = true;
 		if(playCount != 0){
 			played++;
-			if((played/fa.length) >= playCount){
+			if((played/cf.frameCount) >= playCount){
 				this.stop();
 				c.players.remove(name);
 			}
 		}
 	}
 	
-	boolean atend = false;
+	boolean atEnd = false;
 	boolean stopped = false;
 	public void stop(){
 		if(stopped){
@@ -82,16 +57,12 @@ public class CinemaPlayer extends TimerTask {
 		t.cancel();
 		t.purge();
 		t=null;
-		while(!atend){
+		while(!atEnd){
 			try {
 				Thread.sleep(0);
 			} catch (InterruptedException e) {
 			}
 		}
-		fa=null;
-		if(restoreafterstop){
-			um.Undo(setAir);
-		}
+		cf.unload();
 	}
-	
 }

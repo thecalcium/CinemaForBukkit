@@ -19,8 +19,8 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 
 	Logger log;
-	
-	public void onEnable(){ 
+	CinemaEditor cedit;
+	public void onEnable(){
 		log = this.getLogger();
 		FileInputStream fstream = null;
 		try {
@@ -273,6 +273,47 @@ public class Cinema extends JavaPlugin{
 			}else{
 				sender.sendMessage("pos2 not set");
 			}
+			return true;
+		}
+		//ceditopen <filename>
+		else if(cmd.getName().equalsIgnoreCase("ceditopen")){
+			if(args.length!=1){
+				return false;
+			}
+			try {
+				cedit = new CinemaEditor(args[0], pos1, sender);
+			} catch (IOException e) {
+				sender.sendMessage("some error occoured opening that file");
+			}
+			return true;
+		}
+		//ceditremove <index>
+		else if(cmd.getName().equalsIgnoreCase("ceditremove")){
+			try{
+			cedit.deleteFrame(Integer.parseInt(args[0]));
+			}catch(Exception e){
+				return false;
+			}
+			return true;
+		}
+		//ceditsave
+		else if(cmd.getName().equalsIgnoreCase("ceditsave")){
+			try{
+			cedit.save();
+			}catch(Exception e){
+				return false;
+			}
+			return true;
+		}
+		//ceditclose
+		else if(cmd.getName().equalsIgnoreCase("ceditclose")){
+			cedit.close();
+			cedit = null;
+			return true;
+		}
+		//ceditinfo
+		else if(cmd.getName().equalsIgnoreCase("ceditinfo")){
+			sender.sendMessage("file in editor: " + cedit.file);
 			return true;
 		}
 		return false; 
