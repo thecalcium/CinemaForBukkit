@@ -23,7 +23,7 @@ public class CinemaPlayer extends TimerTask {
 		cf = new CinemaFile(filePath, loc, setAir,restoreafterstop,false);
 		t = new Timer();
 		t.schedule(this, 0, frameTime);
-		sender.sendMessage("Player loaded with " + cf.frameCount + " Frames");
+		sender.sendMessage("Player loaded with " + cf.frameCount() + " Frames");
 	}
 	
 	int nowframe=0;
@@ -34,13 +34,13 @@ public class CinemaPlayer extends TimerTask {
 		atEnd = false;
 		cf.fa[nowframe].Draw(setAir);
 		nowframe++;
-		if(nowframe >= cf.frameCount){
+		if(nowframe >= cf.frameCount()){
 			nowframe = 0;
 		}
 		atEnd = true;
 		if(playCount != 0){
 			played++;
-			if((played/cf.frameCount) >= playCount){
+			if((played/cf.frameCount()) >= playCount){
 				this.stop();
 				c.players.remove(name);
 			}

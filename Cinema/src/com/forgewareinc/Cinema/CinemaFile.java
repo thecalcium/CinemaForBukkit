@@ -10,7 +10,11 @@ import org.bukkit.Material;
 public class CinemaFile {
 
 	public Frame[] fa;
-	public int frameCount=0;
+	//public int frameCount=0;
+	public int frameCount(){
+		return fa.length;
+	}
+	
 	UndoMaker um;
 	boolean setAir=true;
 	boolean restoreAfterUnload = true;
@@ -24,13 +28,13 @@ public class CinemaFile {
 		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
 		this.filePath = filePath;
 		
-		frameCount = raf.readInt();//how much frames?
-		fa = new Frame[frameCount];
+		int framecount = raf.readInt();//how much frames?
+		fa = new Frame[framecount];
 		int xx = loc.getBlockX();
 		int yy = loc.getBlockY();
 		int zz = loc.getBlockZ();
 		if(forEditor){xx=0;yy=0;zz=0;}
-		for(int i = 0; i < frameCount; i++){
+		for(int i = 0; i < frameCount(); i++){
 			int blocks = raf.readInt();
 			myBlock[] mba = new myBlock[blocks];
 			for(int b = 0; b < blocks;b++){
@@ -68,6 +72,7 @@ public class CinemaFile {
 		if(restoreAfterUnload){
 			um.Undo(setAir);
 		}
+		um.Clear();
 		um=null;
 	}
 	
@@ -84,7 +89,6 @@ public class CinemaFile {
 			}
 		}
 		fa = temp;
-		frameCount--;
 		return true;
 	}
 	
@@ -93,7 +97,7 @@ public class CinemaFile {
 		file.delete();
 		file.createNewFile();
 		RandomAccessFile raf = new RandomAccessFile(filePath,"rw");
-		raf.writeInt(frameCount);
+		raf.writeInt(frameCount());
 		//write all blocks of this frame
 		for(int f = 0; f < fa.length;f++){
 			raf.writeInt(fa[f].mba.length);

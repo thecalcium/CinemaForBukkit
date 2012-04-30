@@ -13,7 +13,7 @@ public class CinemaEditor {
 	public CinemaEditor(String filePath, Location loc, CommandSender sender) throws IOException{
 		cf = new CinemaFile(filePath, loc, true, true, true);
 		this.file = filePath;
-		sender.sendMessage("Loaded file into Cinemaeditor with " + cf.frameCount + " frames");
+		sender.sendMessage("Loaded file into Cinemaeditor with " + cf.frameCount() + " frames");
 		this.sender = sender;
 	}
 	
@@ -30,7 +30,12 @@ public class CinemaEditor {
 		sender.sendMessage("Saved file");
 	}
 	
+	public void show(int index){
+		cf.showFrame(index);
+	}
+	
 	public void close(){
-		
+		cf.unload();
+		sender = null;
 	}
 }

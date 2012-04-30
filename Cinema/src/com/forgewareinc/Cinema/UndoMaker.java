@@ -20,6 +20,9 @@ public class UndoMaker extends Thread{
 	}
 	
 	public void AddmyBlock(myBlock mb){
+		if(oldBlocks == null){
+			oldBlocks = new HashMap<String,myBlock>();
+		}
 		String id = mb.x+";"+mb.y+";"+mb.z;
 		if(!oldBlocks.containsKey(id)){
 			oldBlocks.put(id, mb);

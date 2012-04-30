@@ -41,3 +41,28 @@ commands:
       usage: /cinfo
       permission: Cinema.basic
       permission-message: You don't have permission
+   ceditopen:
+      description: opens a cinema animation for editing
+      usage: /ceditopen <filename>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditremove:
+      description: removes the frame at position "index". the first frame has index 0
+      usage: /ceditremove <index>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditsave:
+      description: saves the cinema animation
+      usage: /ceditsave
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditclose:
+      description: closes the cinemaeditor without saving. unsaved changes to the animation will be lost
+      usage: /ceditclose
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditinfo:
+      description: tells what file is loaded in the editor
+      usage: /ceditinfo
+      permission: Cinema.basic
+      permission-message: You don't have permission

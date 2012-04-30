@@ -164,18 +164,19 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
+			String savefile= "/plugins/cinema"+args[0];
 			try {
-				File file = new File(args[0]);
+				File file = new File(savefile);
 				
 				if(!file.exists()){
 					//create file
 					file.createNewFile();
-					RandomAccessFile raf2 = new RandomAccessFile(args[0],"rw");
+					RandomAccessFile raf2 = new RandomAccessFile(savefile,"rw");
 					raf2.writeInt(0);
 					raf2.close();
 					raf2 = null;
 				}
-				RandomAccessFile raf = new RandomAccessFile(args[0],"rw");
+				RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
 				int framecount = raf.readInt()+1;
 				raf.seek(0);//increment framecount and write back
 				raf.writeInt(framecount);
@@ -235,9 +236,10 @@ public class Cinema extends JavaPlugin{
 				restoreafterstop = args[4].equalsIgnoreCase("1");
 				frameduration = Integer.parseInt(args[5]);
 			}
+			String filePath = "/plugins/cinema" + args[1];
 			if(!players.containsKey(args[0])){
 				try {;
-					players.put(args[0], new CinemaPlayer(args[0], args[1], setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
+					players.put(args[0], new CinemaPlayer(args[0], filePath, setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
 				} catch(FileNotFoundException e){
 					sender.sendMessage("File not found");
 				} catch (IOException e) {
@@ -281,7 +283,7 @@ public class Cinema extends JavaPlugin{
 				return false;
 			}
 			try {
-				cedit = new CinemaEditor(args[0], pos1, sender);
+				cedit = new CinemaEditor("/plugins/cinema" +args[0], pos1, sender);
 			} catch (IOException e) {
 				sender.sendMessage("some error occoured opening that file");
 			}
@@ -290,7 +292,11 @@ public class Cinema extends JavaPlugin{
 		//ceditremove <index>
 		else if(cmd.getName().equalsIgnoreCase("ceditremove")){
 			try{
-			cedit.deleteFrame(Integer.parseInt(args[0]));
+				if(cedit !=null){
+					cedit.deleteFrame(Integer.parseInt(args[0]));
+				}else{
+					sender.sendMessage("No file in Editor");
+				}
 			}catch(Exception e){
 				return false;
 			}
@@ -299,7 +305,11 @@ public class Cinema extends JavaPlugin{
 		//ceditsave
 		else if(cmd.getName().equalsIgnoreCase("ceditsave")){
 			try{
-			cedit.save();
+				if(cedit != null){
+					cedit.save();
+				}else{
+					sender.sendMessage("No file in Editor");
+				}
 			}catch(Exception e){
 				return false;
 			}
@@ -307,13 +317,21 @@ public class Cinema extends JavaPlugin{
 		}
 		//ceditclose
 		else if(cmd.getName().equalsIgnoreCase("ceditclose")){
-			cedit.close();
-			cedit = null;
+			if(cedit != null){
+				cedit.close();
+				cedit = null;
+			}else{
+				sender.sendMessage("No file in Editor");
+			}
 			return true;
 		}
 		//ceditinfo
 		else if(cmd.getName().equalsIgnoreCase("ceditinfo")){
-			sender.sendMessage("file in editor: " + cedit.file);
+			if(cedit != null){
+				sender.sendMessage("File in editor: " + cedit.file);
+			}else{
+				sender.sendMessage("No file in Editor");
+			}
 			return true;
 		}
 		return false; 
