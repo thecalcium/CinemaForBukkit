@@ -41,7 +41,9 @@ public class CinemaFile {
 				int x = raf.readInt()+xx;
 				int y = raf.readInt()+yy;
 				int z = raf.readInt()+zz;
-				um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
+				if(!forEditor){
+					um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
+				}
 				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				mba[b] = mb;
 			}
@@ -57,9 +59,12 @@ public class CinemaFile {
 		} catch(IndexOutOfBoundsException e){}
 	}
 	
+	
 	public void showFrameforEditor(int frameIndex,Location l){
+		um.Undo(setAir);
+		um.Clear();
 		try{
-			fa[frameIndex].Draw(setAir,l);
+			fa[frameIndex].Draw(setAir,l,um);
 		} catch(IndexOutOfBoundsException e){}
 	}
 	

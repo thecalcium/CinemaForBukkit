@@ -283,6 +283,9 @@ public class Cinema extends JavaPlugin{
 				return false;
 			}
 			try {
+				if(cedit !=null){
+					cedit.close();cedit=null;
+				}
 				cedit = new CinemaEditor("/plugins/cinema" +args[0], pos1, sender);
 			} catch (IOException e) {
 				sender.sendMessage("some error occoured opening that file");
@@ -329,6 +332,19 @@ public class Cinema extends JavaPlugin{
 		else if(cmd.getName().equalsIgnoreCase("ceditinfo")){
 			if(cedit != null){
 				sender.sendMessage("File in editor: " + cedit.file);
+			}else{
+				sender.sendMessage("No file in Editor");
+			}
+			return true;
+		}
+		//ceditshow <index>
+		else if(cmd.getName().equalsIgnoreCase("ceditshow")){
+			if(cedit != null){
+				if(pos1!=null){
+					cedit.cf.showFrameforEditor(Integer.parseInt(args[0]), pos1);
+				}else{
+					sender.sendMessage("Pos1 not set. use pos1 to determine place for the frame to show");
+				}
 			}else{
 				sender.sendMessage("No file in Editor");
 			}

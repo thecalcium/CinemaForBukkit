@@ -30,8 +30,8 @@ public class CinemaEditor {
 		sender.sendMessage("Saved file");
 	}
 	
-	public void show(int index){
-		cf.showFrame(index);
+	public void show(int index,Location pos1){
+		cf.showFrameforEditor(index, pos1);
 	}
 	
 	public void close(){
