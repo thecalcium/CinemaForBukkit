@@ -94,19 +94,26 @@ public class Cinema extends JavaPlugin{
 		} catch (IOException e) {
 		}
 		
+		getServer().getPluginManager().registerEvents(new WorldsLoadedListener(this), this);
+	}
+	
+	boolean restored = false;
+	public void restorePlayers(){
+		if(!restored){
 		//load old anims
-		
-		File input = new File(persistentPath);
-		if(input.exists()){
-			RandomAccessFile raf;
-			try {
-				raf = new RandomAccessFile(input,"r");
-				int playercount = raf.readInt();
-				for(int i = 0;i < playercount;i++){
-					CinemaPlayer cp = new CinemaPlayer(raf, this);
-					players.put(cp.name, cp);
-				}
-			} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
+			restored = true;
+			File input = new File(persistentPath);
+			if(input.exists()){
+				RandomAccessFile raf;
+				try {
+					raf = new RandomAccessFile(input,"r");
+					int playercount = raf.readInt();
+					for(int i = 0;i < playercount;i++){
+						CinemaPlayer cp = new CinemaPlayer(raf, this);
+						players.put(cp.name, cp);
+					}
+				} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
+			}
 		}
 	}
 	
@@ -420,6 +427,14 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("deleted animation: "+args[0]);
 			}else{
 				sender.sendMessage("Animation not found");
+			}
+			return true;
+		}
+		//cplayers
+		else if(cmd.getName().equalsIgnoreCase("cplayers")){
+			sender.sendMessage("Cinemaplayers active:");
+			for(String name:players.keySet()){
+				sender.sendMessage(name);
 			}
 			return true;
 		}

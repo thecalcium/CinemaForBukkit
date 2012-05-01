@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 public class UndoMaker extends Thread{
 
 	public World w;
-	public HashMap<String,myBlock> oldBlocks = new HashMap<String,myBlock>();
+	public HashMap<String,myBlock> oldBlocks = null;
 	
 	boolean setair=true;
 	public void Undo(boolean setair){
@@ -23,6 +23,7 @@ public class UndoMaker extends Thread{
 	public UndoMaker(){}
 	
 	public UndoMaker(RandomAccessFile raf,World w) throws IOException{
+		this.w = w;
 		int count=0;
 		count = raf.readInt();
 		for(int i =0;i<count;i++){
@@ -41,6 +42,7 @@ public class UndoMaker extends Thread{
 	}
 	
 	public void run(){
+		if(oldBlocks==null){return;}
 		Set<String> keys = oldBlocks.keySet();
 		for(String s: keys){
 			myBlock b = oldBlocks.get(s);

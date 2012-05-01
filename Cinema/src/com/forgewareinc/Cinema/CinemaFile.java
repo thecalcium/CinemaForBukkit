@@ -25,7 +25,7 @@ public class CinemaFile {
 		um.w = loc.getWorld();
 		this.setAir = setAir;
 		this.restoreAfterUnload = restoreAfterUnload;
-		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
+		RandomAccessFile raf = new RandomAccessFile(new File(filePath),"r");
 		this.filePath = filePath;
 		
 		int framecount = raf.readInt();//how much frames?
@@ -73,7 +73,6 @@ public class CinemaFile {
 				int x = raf.readInt()+xx;
 				int y = raf.readInt()+yy;
 				int z = raf.readInt()+zz;
-				um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
 				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				mba[b] = mb;
 			}
