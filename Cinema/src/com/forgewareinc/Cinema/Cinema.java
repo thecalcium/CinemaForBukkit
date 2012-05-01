@@ -21,6 +21,10 @@ public class Cinema extends JavaPlugin{
 	Logger log;
 	CinemaEditor cedit;
 	public void onEnable(){
+		//create folders in plugins...
+		new File("plugins/cinema").mkdirs();
+		
+		
 		log = this.getLogger();
 		FileInputStream fstream = null;
 		try {
@@ -164,7 +168,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			String savefile= "/plugins/cinema"+args[0];
+			String savefile= "plugins/cinema/"+args[0];
 			try {
 				File file = new File(savefile);
 				
@@ -236,7 +240,7 @@ public class Cinema extends JavaPlugin{
 				restoreafterstop = args[4].equalsIgnoreCase("1");
 				frameduration = Integer.parseInt(args[5]);
 			}
-			String filePath = "/plugins/cinema" + args[1];
+			String filePath = "plugins/cinema/" + args[1];
 			if(!players.containsKey(args[0])){
 				try {;
 					players.put(args[0], new CinemaPlayer(args[0], filePath, setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
