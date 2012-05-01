@@ -41,6 +41,11 @@ commands:
       usage: /cinfo
       permission: Cinema.basic
       permission-message: You don't have permission
+   cremove:
+      description: deletes an animation with the given name
+      usage: /cremove <filename>
+      permission: Cinema.basic
+      permission-message: You don't have permission
    ceditopen:
       description: opens a cinema animation for editing
       usage: /ceditopen <filename>

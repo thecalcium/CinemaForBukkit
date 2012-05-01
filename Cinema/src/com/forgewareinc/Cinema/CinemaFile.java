@@ -53,6 +53,36 @@ public class CinemaFile {
 		raf = null;
 	}
 	
+	public CinemaFile(String filePath,Location loc,boolean setAir,boolean restoreAfterUnload, RandomAccessFile rafForUndo) throws IOException{
+		um = new UndoMaker(rafForUndo,loc.getWorld());
+		
+		this.setAir = setAir;
+		this.restoreAfterUnload = restoreAfterUnload;
+		RandomAccessFile raf = new RandomAccessFile(filePath,"r");
+		this.filePath = filePath;
+		
+		int framecount = raf.readInt();//how much frames?
+		fa = new Frame[framecount];
+		int xx = loc.getBlockX();
+		int yy = loc.getBlockY();
+		int zz = loc.getBlockZ();
+		for(int i = 0; i < frameCount(); i++){
+			int blocks = raf.readInt();
+			myBlock[] mba = new myBlock[blocks];
+			for(int b = 0; b < blocks;b++){
+				int x = raf.readInt()+xx;
+				int y = raf.readInt()+yy;
+				int z = raf.readInt()+zz;
+				um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
+				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
+				mba[b] = mb;
+			}
+			fa[i]= new Frame(mba,um.w);
+		}
+		raf.close();
+		raf = null;
+	}
+	
 	public void showFrame(int frameIndex){
 		try{
 			fa[frameIndex].Draw(setAir);
@@ -115,5 +145,9 @@ public class CinemaFile {
 			}
 		}
 		raf.close();
+	}
+	
+	public void writeToCinemaFile(RandomAccessFile rafForUndo) throws IOException{
+		um.writeToCinemaFile(rafForUndo);
 	}
 }

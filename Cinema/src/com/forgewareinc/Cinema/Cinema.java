@@ -1,6 +1,8 @@
 package com.forgewareinc.Cinema;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -17,15 +19,34 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Cinema extends JavaPlugin{
 
 	public static final String configPath = "plugins/cinema.cfg";
+	public static final String persistentPath = "plugins/cinemafile";
+	public static final int version = 14;
 
 	Logger log;
 	CinemaEditor cedit;
 	public void onEnable(){
+		log = this.getLogger();
+		
 		//create folders in plugins...
 		new File("plugins/cinema").mkdirs();
 		
+		//look for new version
+		try {
+		    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
+		    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+		    int vers = Integer.parseInt(in.readLine());
+		    if(vers > version){
+		    	log.info("NEW VERSION AVAILABLE FOR CINEMA PLUGIN!!! you have "+ version + " and the newest version is " + vers);
+		    	log.info("get it here: https://sourceforge.net/projects/cinemaforbukkit/files/");
+		    }
+		    in.close();
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
+		}
 		
-		log = this.getLogger();
+		
+		//load config
+		
 		FileInputStream fstream = null;
 		try {
 			fstream = new FileInputStream(configPath);
@@ -72,6 +93,41 @@ public class Cinema extends JavaPlugin{
 			br.close();
 		} catch (IOException e) {
 		}
+		
+		//load old anims
+		
+		File input = new File(persistentPath);
+		if(input.exists()){
+			RandomAccessFile raf;
+			try {
+				raf = new RandomAccessFile(input,"r");
+				int playercount = raf.readInt();
+				for(int i = 0;i < playercount;i++){
+					CinemaPlayer cp = new CinemaPlayer(raf, this);
+					players.put(cp.name, cp);
+				}
+			} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
+		}
+	}
+	
+	public void onDisable(){
+		File output = new File(persistentPath);
+		if(output.exists()){
+			output.delete();//delete old file
+		}
+		try {
+			output.createNewFile();
+		} catch (IOException e) {
+			log.info("Were not able to create file for cinema persistence");
+		}
+		try {
+			RandomAccessFile raf = new RandomAccessFile(output,"rw");
+			raf.writeInt(players.size());
+			for(String key: players.keySet()){
+				players.get(key).writeToCinemaFile(raf);
+			}
+			raf.close();
+		} catch (FileNotFoundException e) {} catch (IOException e) {}
 	}
 	
 	// default params for cplay
@@ -279,6 +335,7 @@ public class Cinema extends JavaPlugin{
 			}else{
 				sender.sendMessage("pos2 not set");
 			}
+			sender.sendMessage("Cinema Version: "+version);
 			return true;
 		}
 		//ceditopen <filename>
@@ -351,6 +408,20 @@ public class Cinema extends JavaPlugin{
 				}
 			}else{
 				sender.sendMessage("No file in Editor");
+			}
+			return true;
+		}
+		//cremove <filename>
+		else if(cmd.getName().equalsIgnoreCase("cremove")){
+			if(args.length!=1){
+				return false;
+			}
+			File f = new File("plugins/cinema/" + args[0]);
+			if(f.exists()){
+				f.delete();
+				sender.sendMessage("deleted animation: "+args[0]);
+			}else{
+				sender.sendMessage("Animation not found");
 			}
 			return true;
 		}

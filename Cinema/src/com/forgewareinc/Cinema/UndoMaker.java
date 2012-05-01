@@ -1,10 +1,11 @@
 package com.forgewareinc.Cinema;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Set;
 
-import net.minecraft.server.Material;
-
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -17,6 +18,16 @@ public class UndoMaker extends Thread{
 	public void Undo(boolean setair){
 		this.setair= setair;
 		this.start();
+	}
+	
+	public UndoMaker(){}
+	
+	public UndoMaker(RandomAccessFile raf,World w) throws IOException{
+		int count=0;
+		count = raf.readInt();
+		for(int i =0;i<count;i++){
+			AddmyBlock(new myBlock(raf.readInt(), raf.readInt(), raf.readInt(), Material.getMaterial(raf.readInt()), raf.readByte()));
+		}
 	}
 	
 	public void AddmyBlock(myBlock mb){
@@ -45,5 +56,17 @@ public class UndoMaker extends Thread{
 	public void Clear(){
 		oldBlocks.clear();
 		oldBlocks = null;
+	}
+	
+	public void writeToCinemaFile(RandomAccessFile raf) throws IOException{
+		raf.writeInt(oldBlocks.size());
+		for(String key : oldBlocks.keySet()){
+			myBlock mb = oldBlocks.get(key);
+			raf.writeInt(mb.x);
+			raf.writeInt(mb.y);
+			raf.writeInt(mb.z);
+			raf.writeInt(mb.m.getId());
+			raf.writeByte(mb.data);
+		}
 	}
 }
