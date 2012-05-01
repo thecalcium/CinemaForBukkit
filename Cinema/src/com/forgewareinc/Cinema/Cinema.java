@@ -290,7 +290,7 @@ public class Cinema extends JavaPlugin{
 				if(cedit !=null){
 					cedit.close();cedit=null;
 				}
-				cedit = new CinemaEditor("/plugins/cinema" +args[0], pos1, sender);
+				cedit = new CinemaEditor("plugins/cinema/" +args[0], pos1, sender);
 			} catch (IOException e) {
 				sender.sendMessage("some error occoured opening that file");
 			}
