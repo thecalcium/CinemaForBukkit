@@ -21,7 +21,23 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
 	public static final int version = 14;
-
+	public static int newestVersion = version;
+	
+	public boolean newVersionAvail(){
+		try {
+		    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
+		    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+		    newestVersion = Integer.parseInt(in.readLine());
+		    if(newestVersion > version){
+		    	return true;
+		    }
+		    in.close();
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
+		}
+		return false;
+	}
+	
 	Logger log;
 	CinemaEditor cedit;
 	public void onEnable(){
@@ -31,17 +47,9 @@ public class Cinema extends JavaPlugin{
 		new File("plugins/cinema").mkdirs();
 		
 		//look for new version
-		try {
-		    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
-		    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-		    int vers = Integer.parseInt(in.readLine());
-		    if(vers > version){
-		    	log.info("NEW VERSION AVAILABLE FOR CINEMA PLUGIN!!! you have "+ version + " and the newest version is " + vers);
-		    	log.info("get it here: https://sourceforge.net/projects/cinemaforbukkit/files/");
-		    }
-		    in.close();
-		} catch (MalformedURLException e) {
-		} catch (IOException e) {
+		if(newVersionAvail()){
+			log.info("NEW VERSION AVAILABLE FOR CINEMA PLUGIN!!! you have "+ version + " and the newest version is " + newestVersion);
+	    	log.info("get it here: https://sourceforge.net/projects/cinemaforbukkit/files/");
 		}
 		
 		
@@ -341,6 +349,9 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("pos2 not set");
 			}
 			sender.sendMessage("Cinema Version: "+version);
+			if(newVersionAvail()){
+				sender.sendMessage("NEW VERSION AVAILABLE!!! newest Version: "+newestVersion);
+			}
 			return true;
 		}
 		//ceditopen <filename>

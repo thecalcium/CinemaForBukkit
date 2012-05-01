@@ -37,7 +37,7 @@ commands:
       permission: Cinema.basic
       permission-message: You don't have permission
    cinfo:
-      description: shows pos1 and pos2
+      description: shows pos1, pos2 and the version of this Plugin. Also notifys you if there is a new version available
       usage: /cinfo
       permission: Cinema.basic
       permission-message: You don't have permission
