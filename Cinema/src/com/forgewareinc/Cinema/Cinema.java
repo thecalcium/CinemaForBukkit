@@ -141,11 +141,9 @@ public class Cinema extends JavaPlugin{
 	public HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
 	Location pos1=null,pos2=null;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if(sender instanceof Player){
-			if(!sender.hasPermission("Cinema.cinema")){
-				sender.sendMessage("you dont have permission to use this plugin");
-				return true;
-			}
+		if(!sender.hasPermission("Cinema.cinema")){
+			sender.sendMessage("you dont have permission to use this plugin");
+			return true;
 		}
 		//csaveair <0/1>
 		if(cmd.getName().equalsIgnoreCase("csaveair")){
@@ -271,7 +269,7 @@ public class Cinema extends JavaPlugin{
 				return true;
 			}
 			catch (IOException e) {
-				sender.sendMessage("Some IOException occured. maybe you dont have write access?");
+				sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
 				return true;
 			}
 			return true;
