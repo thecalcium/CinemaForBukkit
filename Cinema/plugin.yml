@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.4
+version: 1.41
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -46,7 +46,7 @@ commands:
       usage: /cplayers
       permission: Cinema.basic
       permission-message: You don't have permission
-   cremove:
+   cinemaremove:
       description: deletes an animation with the given name
       usage: /cremove <filename>
       permission: Cinema.basic

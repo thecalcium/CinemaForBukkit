@@ -20,7 +20,7 @@ public class Cinema extends JavaPlugin{
 
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
-	public static final int version = 14;
+	public static final int version = 141;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -427,8 +427,8 @@ public class Cinema extends JavaPlugin{
 			}
 			return true;
 		}
-		//cremove <filename>
-		else if(cmd.getName().equalsIgnoreCase("cremove")){
+		//cinemaremove <filename>
+		else if(cmd.getName().equalsIgnoreCase("cinemaremove")){
 			if(args.length!=1){
 				return false;
 			}
