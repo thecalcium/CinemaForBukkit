@@ -91,7 +91,6 @@ public class CinemaFile {
 	
 	public void showFrameforEditor(int frameIndex,Location l){
 		um.Undo(setAir);
-		um.Clear();
 		try{
 			fa[frameIndex].Draw(setAir,l,um);
 		} catch(IndexOutOfBoundsException e){}
@@ -106,7 +105,6 @@ public class CinemaFile {
 		if(restoreAfterUnload){
 			um.Undo(setAir);
 		}
-		um.Clear();
 		um=null;
 	}
 	

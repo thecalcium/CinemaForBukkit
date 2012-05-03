@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.41
+version: 1.42
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -22,8 +22,8 @@ commands:
       permission: Cinema.basic
       permission-message: You don't have permission
    csave:
-      description: Saves the frame marked by the two positions to the given file. If file does not exist it will be created. If used by console you have to specify the world too
-      usage: /csave <filename> [[worldname if console]]
+      description: Saves the frame marked by the two positions to the given file. If file does not exist it will be created. Optionally you can specify the frame index to save. /csave test 0 saves as first frame
+      usage: /csave <filename> [framenumber]
       permission: Cinema.basic
       permission-message: You don't have permission
    cplay:

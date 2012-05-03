@@ -20,7 +20,7 @@ public class Cinema extends JavaPlugin{
 
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
-	public static final int version = 141;
+	public static final int version = 142;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -120,6 +120,7 @@ public class Cinema extends JavaPlugin{
 						CinemaPlayer cp = new CinemaPlayer(raf, this);
 						players.put(cp.name, cp);
 					}
+					raf.close();
 				} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
 			}
 		}
@@ -128,7 +129,8 @@ public class Cinema extends JavaPlugin{
 	public void onDisable(){
 		File output = new File(persistentPath);
 		if(output.exists()){
-			output.delete();//delete old file
+			if(!output.delete())//delete old file
+				log.info("cant delete old persistent cinema file?? well lets just build up on it then");
 		}
 		try {
 			output.createNewFile();
@@ -230,7 +232,7 @@ public class Cinema extends JavaPlugin{
 				return true;
 			}
 			World w = pos1.getWorld();
-			if(args.length != 1){
+			if(args.length != 1 || args.length != 2){
 				return false;
 			}
 			if(pos1.getWorld() != pos2.getWorld()){
@@ -250,10 +252,28 @@ public class Cinema extends JavaPlugin{
 					raf2 = null;
 				}
 				RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
-				int framecount = raf.readInt()+1;
+				int framecount = raf.readInt();
+				int posToSafe =0;
+				if(args.length == 2){
+					posToSafe = Math.min(Integer.parseInt(args[1]), framecount);
+				}else{
+					posToSafe = framecount;
+				}
+				framecount++;
 				raf.seek(0);//increment framecount and write back
 				raf.writeInt(framecount);
-				raf.seek(raf.length());//jump to end of file
+				//raf.seek(raf.length());//jump to end of file
+				long rewrite = 0;
+				for(int i =0;i< posToSafe;i++){
+					int blocks = raf.readInt();
+					raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
+				}
+				rewrite = raf.getFilePointer();//store pos to write frame
+				byte[] ba = new byte[(int)(raf.length()-rewrite)];
+				for(int i =0;i<ba.length;i++){
+					ba[i]= raf.readByte();
+				}
+				raf.seek(rewrite);
 				//write all blocks of this frame
 				int minx = Math.min(pos1.getBlockX(), pos2.getBlockX());
 				int miny = Math.min(pos1.getBlockY(), pos2.getBlockY());
@@ -277,6 +297,8 @@ public class Cinema extends JavaPlugin{
 						}	
 					}
 				}
+				
+				raf.write(ba);//write back rest
 				raf.close();
 				sender.sendMessage("frame saved as frame number " + framecount);
 			} catch (FileNotFoundException e) {
