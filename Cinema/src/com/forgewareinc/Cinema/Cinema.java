@@ -232,7 +232,7 @@ public class Cinema extends JavaPlugin{
 				return true;
 			}
 			World w = pos1.getWorld();
-			if(args.length != 1 || args.length != 2){
+			if(args.length != 1 && args.length != 2){
 				return false;
 			}
 			if(pos1.getWorld() != pos2.getWorld()){
@@ -300,7 +300,7 @@ public class Cinema extends JavaPlugin{
 				
 				raf.write(ba);//write back rest
 				raf.close();
-				sender.sendMessage("frame saved as frame number " + framecount);
+				sender.sendMessage("frame saved as frame index " + posToSafe);
 			} catch (FileNotFoundException e) {
 				sender.sendMessage("File not found");
 				return true;
