@@ -1,10 +1,16 @@
 package com.forgewareinc.Cinema;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 import net.minecraft.server.Material;
 
@@ -468,6 +474,27 @@ public class Cinema extends JavaPlugin{
 			sender.sendMessage("Cinemaplayers active:");
 			for(String name:players.keySet()){
 				sender.sendMessage(name);
+			}
+			return true;
+		}
+		//cinemagif
+		else if(cmd.getName().equalsIgnoreCase("cinemagif")){
+			if(args.length!=2){
+				return false;
+			}
+			Iterator readers = ImageIO.getImageReadersByFormatName("gif");
+			ImageReader reader = (ImageReader)readers.next();
+			ImageInputStream iis=null;
+			try {
+				iis = ImageIO.createImageInputStream(new File(args[0]));
+			} catch (IOException e) {}
+			reader.setInput(iis);
+			for(int i =0;true;i++){
+				try {
+					BufferedImage bi = reader.read(i);
+				} catch (IndexOutOfBoundsException e){
+					break;
+				} catch (IOException e) {}
 			}
 			return true;
 		}

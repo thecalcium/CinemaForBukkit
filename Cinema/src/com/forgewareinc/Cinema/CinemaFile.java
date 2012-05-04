@@ -82,6 +82,11 @@ public class CinemaFile {
 		raf = null;
 	}
 	
+	public CinemaFile(Frame[] fa,String filePath){
+		this.fa = fa;
+		this.filePath = filePath;
+	}
+	
 	public void showFrame(int frameIndex){
 		try{
 			fa[frameIndex].Draw(setAir);

@@ -1,5 +1,7 @@
 package com.forgewareinc.Cinema;
 
+import java.awt.image.BufferedImage;
+
 import net.minecraft.server.Material;
 
 import org.bukkit.Location;
@@ -14,6 +16,10 @@ public class Frame {
 	public Frame(myBlock[] mba, World w){
 		this.mba = mba;
 		this.w = w;
+	}
+	
+	public Frame(BufferedImage bi){
+		
 	}
 	
 	public void Draw(boolean setAir){
