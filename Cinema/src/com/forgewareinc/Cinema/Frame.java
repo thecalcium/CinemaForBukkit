@@ -24,10 +24,13 @@ public class Frame {
 		for(int x=0;x<bi.getWidth();x++){
 			for(int y=0;y<bi.getHeight();y++){
 				switch(al){
-				case faceupdown:
+				case faceup:
 					//y = 0
 					//x=x
 					//z=y
+					mba[i] = Color.fromColor(bi.getWidth()-1-x, 0, y, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				case facedown:
 					mba[i] = Color.fromColor(x, 0, y, bi.getRGB(x, bi.getHeight()-1-y));
 					break;
 				case vertical0:

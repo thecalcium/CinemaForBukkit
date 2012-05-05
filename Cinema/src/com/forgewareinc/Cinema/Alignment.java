@@ -2,7 +2,8 @@ package com.forgewareinc.Cinema;
 
 public enum Alignment {
 
-	faceupdown,
+	faceup,
+	facedown,
 	vertical0,
 	vertical90,
 	vertical180,

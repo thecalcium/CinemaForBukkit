@@ -10,7 +10,8 @@ public class WorldsLoadedListener implements Listener {
 	public WorldsLoadedListener(Cinema c){
 		this.c = c;
 	}
-	
+	//well just listen for the first login huh?
+	//cause bukkit does not support unregistering events... i hate you ...
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
     	c.restorePlayers();
