@@ -18,8 +18,40 @@ public class Frame {
 		this.w = w;
 	}
 	
-	public Frame(BufferedImage bi){
-		
+	public Frame(BufferedImage bi,Alignment al){
+		mba = new myBlock[bi.getWidth()*bi.getHeight()];
+		int i =0;
+		for(int x=0;x<bi.getWidth();x++){
+			for(int y=0;y<bi.getHeight();y++){
+				switch(al){
+				case faceupdown:
+					//y = 0
+					//x=x
+					//z=y
+					mba[i] = Color.fromColor(x, 0, y, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				case vertical0:
+					//z=0
+					//x=x
+					//y=y
+					mba[i] = Color.fromColor(x, y, 0, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				case vertical90:
+					//z=x
+					//y=y
+					//x=0
+					mba[i] = Color.fromColor(0, y, x, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				case vertical180:
+					mba[i] = Color.fromColor(bi.getWidth()-1-x, y, 0, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				case vertical270:
+					mba[i] = Color.fromColor(0, y, bi.getWidth()-1-x, bi.getRGB(x, bi.getHeight()-1-y));
+					break;
+				}
+				i++;
+			}
+		}
 	}
 	
 	public void Draw(boolean setAir){

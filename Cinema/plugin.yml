@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.42
+version: 1.5
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -79,5 +79,15 @@ commands:
    ceditshow:
       description: shows the frame at position index
       usage: /ceditshow <index>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemagif:
+      description: converts a given .gif picture (or any picture) to a cinemafile. (normal pics would result in only one frame)
+      usage: /cinemagif <inputfile> <outputname> <alignment(see /cinemagifalignments)>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemagifalignments:
+      description: lists all available alignments
+      usage: /cinemagifalignments
       permission: Cinema.basic
       permission-message: You don't have permission

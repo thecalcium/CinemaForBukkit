@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -26,7 +27,8 @@ public class Cinema extends JavaPlugin{
 
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
-	public static final int version = 142;
+	public static final String savePath = "plugins/cinema/";
+	public static final int version = 150;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -40,6 +42,7 @@ public class Cinema extends JavaPlugin{
 		    in.close();
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
+			log.info("couldnt look up version for cinema. host not reachable?");
 		}
 		return false;
 	}
@@ -245,7 +248,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			String savefile= "plugins/cinema/"+args[0];
+			String savefile= savePath+args[0];
 			try {
 				File file = new File(savefile);
 				
@@ -337,7 +340,7 @@ public class Cinema extends JavaPlugin{
 				restoreafterstop = args[4].equalsIgnoreCase("1");
 				frameduration = Integer.parseInt(args[5]);
 			}
-			String filePath = "plugins/cinema/" + args[1];
+			String filePath = savePath + args[1];
 			if(!players.containsKey(args[0])){
 				try {;
 					players.put(args[0], new CinemaPlayer(args[0], filePath, setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
@@ -379,6 +382,7 @@ public class Cinema extends JavaPlugin{
 			sender.sendMessage("Cinema Version: "+version);
 			if(newVersionAvail()){
 				sender.sendMessage("NEW VERSION AVAILABLE!!! newest Version: "+newestVersion);
+				sender.sendMessage("you have version: "+version);
 			}
 			return true;
 		}
@@ -391,7 +395,7 @@ public class Cinema extends JavaPlugin{
 				if(cedit !=null){
 					cedit.close();cedit=null;
 				}
-				cedit = new CinemaEditor("plugins/cinema/" +args[0], pos1, sender);
+				cedit = new CinemaEditor(savePath +args[0], pos1, sender);
 			} catch (IOException e) {
 				sender.sendMessage("some error occoured opening that file");
 			}
@@ -460,7 +464,7 @@ public class Cinema extends JavaPlugin{
 			if(args.length!=1){
 				return false;
 			}
-			File f = new File("plugins/cinema/" + args[0]);
+			File f = new File(savePath + args[0]);
 			if(f.exists()){
 				f.delete();
 				sender.sendMessage("deleted animation: "+args[0]);
@@ -477,27 +481,54 @@ public class Cinema extends JavaPlugin{
 			}
 			return true;
 		}
-		//cinemagif
+		//cinemagif <in> <out> <alignment>
 		else if(cmd.getName().equalsIgnoreCase("cinemagif")){
-			if(args.length!=2){
+			if(args.length!=3){
 				return false;
 			}
-			Iterator readers = ImageIO.getImageReadersByFormatName("gif");
-			ImageReader reader = (ImageReader)readers.next();
+			if(Integer.parseInt(args[2])<0 ||Integer.parseInt(args[2])>4){
+				sender.sendMessage("invalid alignment");
+				return true;
+			}
+			Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("gif");
+			ImageReader reader = readers.next();
 			ImageInputStream iis=null;
 			try {
-				iis = ImageIO.createImageInputStream(new File(args[0]));
+				iis = ImageIO.createImageInputStream(new File(savePath + args[0]));
+			}catch(FileNotFoundException e){
+				sender.sendMessage("input file not found");
+				return true;
 			} catch (IOException e) {}
 			reader.setInput(iis);
+			LinkedList<Frame> frames = new LinkedList<Frame>();
 			for(int i =0;true;i++){
 				try {
 					BufferedImage bi = reader.read(i);
+					frames.add(new Frame(bi,Alignment.values()[Integer.parseInt(args[2])]));
 				} catch (IndexOutOfBoundsException e){
 					break;
 				} catch (IOException e) {}
 			}
+			Frame[] fa = new Frame[frames.size()];
+			frames.toArray(fa);
+			CinemaFile cf = new CinemaFile(fa, savePath + args[1]);
+			try {
+				cf.save();
+				sender.sendMessage("Conversion successful");
+			} catch (IOException e) {}
 			return true;
 		}
-		return false; 
+		//cinemagifalignments
+		else if(cmd.getName().equalsIgnoreCase("cinemagifalignments")){
+			sender.sendMessage("Available Alignments:");
+			int i =0;
+			for(Alignment al:Alignment.values()){
+				sender.sendMessage(i + ": " + al.name());
+				i++;
+			}
+			return true;
+		}
+		return false;
+		
 	}
 }
