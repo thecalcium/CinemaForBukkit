@@ -43,10 +43,10 @@ public class Frame {
 					mba[i] = Color.fromColor(0, y, x, bi.getRGB(x, bi.getHeight()-1-y));
 					break;
 				case vertical180:
-					mba[i] = Color.fromColor(bi.getWidth()-1-x, y, 0, bi.getRGB(x, bi.getHeight()-1-y));
+					mba[i] = Color.fromColor(-bi.getWidth()+1+x, y, 0, bi.getRGB(x, bi.getHeight()-1-y));
 					break;
 				case vertical270:
-					mba[i] = Color.fromColor(0, y, bi.getWidth()-1-x, bi.getRGB(x, bi.getHeight()-1-y));
+					mba[i] = Color.fromColor(0, y, -bi.getWidth()+1+x, bi.getRGB(x, bi.getHeight()-1-y));
 					break;
 				}
 				i++;
