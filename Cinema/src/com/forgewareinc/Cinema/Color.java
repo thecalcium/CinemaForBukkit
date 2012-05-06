@@ -178,7 +178,8 @@ public class Color {
 		//new Color(101,101,101,,0),//crack 10
 		//9
 		//new Color(170,77,51,,0),//tnt bottom
-		new Color(123,89,37,Material.CHEST.getId(),(byte)0),//chest side
+		//new Color(123,89,37,Material.CHEST.getId(),(byte)0),//chest side
+		//chests kept crashing the game...
 		//new Color(126,91,38,,0),//big chest front
 		//new Color(127,92,36,,0),//big chest rear
 		new Color(100,67,50,Material.JUKEBOX.getId(),(byte)0),//jukebox
