@@ -82,7 +82,7 @@ commands:
       permission: Cinema.basic
       permission-message: You don't have permission
    cinemagif:
-      description: converts a given .gif picture (or any picture) to a cinemafile. (normal pics would result in only one frame)
+      description: converts a given .gif picture (or any picture) to a cinemafile. (normal pics would result in only one frame) alignment is a integer number. not the name of the alignment, but the number
       usage: /cinemagif <inputfile> <outputname> <alignment(see /cinemagifalignments)>
       permission: Cinema.basic
       permission-message: You don't have permission

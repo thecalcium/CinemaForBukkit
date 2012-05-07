@@ -13,7 +13,7 @@ public class CinemaPlayer extends TimerTask {
 	int playCount;
 	Timer t;
 	Cinema c;
-	CinemaFile cf;
+	public CinemaFile cf;
 	
 	String name;
 	String filePath;
@@ -22,7 +22,7 @@ public class CinemaPlayer extends TimerTask {
 	boolean restoreafterstop;
 	int frameTime;
 	Location loc;
-	public CinemaPlayer(String name, String filePath, boolean setAir,int playCount,boolean restoreafterstop,int frameTime, Location loc, CommandSender sender,Cinema c) throws IOException{
+	public CinemaPlayer(String name, String filePath, boolean setAir,int playCount,boolean restoreafterstop,int frameTime, Location loc, CommandSender sender,Cinema c){
 		this.playCount = playCount;
 		this.c = c;
 		
@@ -32,8 +32,11 @@ public class CinemaPlayer extends TimerTask {
 		this.restoreafterstop = restoreafterstop;
 		this.frameTime = frameTime;
 		this.loc = loc;
-		
-		cf = new CinemaFile(filePath, loc, setAir,restoreafterstop,false);
+		sender.sendMessage("Start loading file...");
+		new CinemaFileAsyncLoader(filePath, loc, setAir,restoreafterstop,false,sender,this).start();
+	}
+	
+	public void start(CommandSender sender){
 		t = new Timer();
 		t.schedule(this, 0, frameTime);
 		sender.sendMessage("Player loaded with " + cf.frameCount() + " Frames");
@@ -111,5 +114,10 @@ public class CinemaPlayer extends TimerTask {
 			}
 		}
 		cf.unload();
+	}
+
+	public void removeDueToEx() {
+		// TODO Auto-generated method stub
+		c.players.remove(name);
 	}
 }
