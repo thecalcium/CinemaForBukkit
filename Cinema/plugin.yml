@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.5
+version: 1.51
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin

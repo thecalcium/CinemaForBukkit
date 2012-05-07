@@ -28,7 +28,7 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
 	public static final String savePath = "plugins/cinema/";
-	public static final int version = 150;
+	public static final int version = 151;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
