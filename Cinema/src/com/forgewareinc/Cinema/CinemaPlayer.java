@@ -36,7 +36,8 @@ public class CinemaPlayer extends TimerTask {
 		new CinemaFileAsyncLoader(filePath, loc, setAir,restoreafterstop,false,sender,this).start();
 	}
 	
-	public void start(CommandSender sender){
+	public void mystart(CommandSender sender){
+		players.put(name, this);
 		t = new Timer();
 		t.schedule(this, 0, frameTime);
 		sender.sendMessage("Player loaded with " + cf.frameCount() + " Frames");
@@ -88,11 +89,12 @@ public class CinemaPlayer extends TimerTask {
 			nowframe = 0;
 		}
 		atEnd = true;
-		if(playCount != 0){
+		if(playCount != 0 && !stopped){
 			played++;
 			if((played/cf.frameCount()) >= playCount){
 				this.stop();
-				c.players.remove(name);
+				//c.players.remove(name);
+				players.remove(name);
 			}
 		}
 	}
@@ -117,7 +119,9 @@ public class CinemaPlayer extends TimerTask {
 	}
 
 	public void removeDueToEx() {
-		// TODO Auto-generated method stub
-		c.players.remove(name);
+		//c.players.remove(name);
+		players.remove(name);
 	}
+	
+	public static HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
 }

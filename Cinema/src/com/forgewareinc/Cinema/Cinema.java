@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -124,7 +124,7 @@ public class Cinema extends JavaPlugin{
 				int playercount = raf.readInt();
 				for(int i = 0;i < playercount;i++){
 					CinemaPlayer cp = new CinemaPlayer(raf, this);
-					players.put(cp.name, cp);
+					CinemaPlayer.players.put(cp.name, cp);
 				}
 				raf.close();
 			} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
@@ -144,9 +144,9 @@ public class Cinema extends JavaPlugin{
 		}
 		try {
 			RandomAccessFile raf = new RandomAccessFile(output,"rw");
-			raf.writeInt(players.size());
-			for(String key: players.keySet()){
-				players.get(key).writeToCinemaFile(raf);
+			raf.writeInt(CinemaPlayer.players.size());
+			for(String key: CinemaPlayer.players.keySet()){
+				CinemaPlayer.players.get(key).writeToCinemaFile(raf);
 			}
 			raf.close();
 		} catch (FileNotFoundException e) {} catch (IOException e) {}
@@ -160,7 +160,7 @@ public class Cinema extends JavaPlugin{
 			
 	//normal stuff
 	boolean saveair = true;
-	public HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
+	//public HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
 	Location pos1=null,pos2=null;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if(!sender.hasPermission("Cinema.cinema")){
@@ -337,8 +337,9 @@ public class Cinema extends JavaPlugin{
 				frameduration = Integer.parseInt(args[5]);
 			}
 			String filePath = savePath + args[1];
-			if(!players.containsKey(args[0])){
-				players.put(args[0], new CinemaPlayer(args[0], filePath, setair, playcount, restoreafterstop, frameduration, pos1,sender,this));
+			if(!CinemaPlayer.players.containsKey(args[0])){
+				//players.put(args[0], 
+				new CinemaPlayer(args[0], filePath, setair, playcount, restoreafterstop, frameduration, pos1,sender,this);//);
 				return true;
 			}else{
 				sender.sendMessage("Player already in use");
@@ -347,9 +348,9 @@ public class Cinema extends JavaPlugin{
 		}
 		//cstop playername
 		else if(cmd.getName().equalsIgnoreCase("cstop")){
-			if(args.length == 1 && players.containsKey(args[0])){
-				players.get(args[0]).stop();
-				players.remove(args[0]);
+			if(args.length == 1 && CinemaPlayer.players.containsKey(args[0])){
+				CinemaPlayer.players.get(args[0]).stop();
+				CinemaPlayer.players.remove(args[0]);
 				sender.sendMessage("Player stopped");
 				return true;
 			}else{
@@ -466,7 +467,7 @@ public class Cinema extends JavaPlugin{
 		//cplayers
 		else if(cmd.getName().equalsIgnoreCase("cplayers")){
 			sender.sendMessage("Cinemaplayers active:");
-			for(String name:players.keySet()){
+			for(String name:CinemaPlayer.players.keySet()){
 				sender.sendMessage(name);
 			}
 			return true;
