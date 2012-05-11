@@ -36,6 +36,7 @@ public class CinemaSaver extends Thread {
 			csave();
 		}
 	}
+	@SuppressWarnings("null")//the warning is wrong. i check for one condition. it will be not null if the conidition is true and it will just be used then
 	private boolean csaveDelta() {
 		String savefile= savePath+args[0];
 		try {
