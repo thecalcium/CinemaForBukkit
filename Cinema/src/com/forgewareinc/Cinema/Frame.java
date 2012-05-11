@@ -66,6 +66,19 @@ public class Frame {
 			}
 		}
 	}
+	
+	public myBlock getBlockAt(int x, int y, int z){
+		for(int i =0;i<mba.length;i++){
+			if(x==mba[i].x){
+				if(y==mba[i].y){
+					if(z==mba[i].z){
+						return mba[i];
+					}
+				}
+			}
+		}
+		return null;
+	}
 
 	public void Draw(boolean setAir, Location l,UndoMaker um) {
 		int xx = l.getBlockX();

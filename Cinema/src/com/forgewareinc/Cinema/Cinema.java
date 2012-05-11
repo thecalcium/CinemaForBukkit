@@ -13,10 +13,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-import net.minecraft.server.Material;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,7 +27,7 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
 	public static final String savePath = "plugins/cinema/";
-	public static final int version = 151;
+	public static final int version = 160;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -158,8 +157,6 @@ public class Cinema extends JavaPlugin{
 	boolean defaultRestoreAfterStop = true;
 	int defaultFrameDuration = 75;
 			
-	//normal stuff
-	boolean saveair = true;
 	//public HashMap<String,CinemaPlayer> players = new HashMap<String,CinemaPlayer>();
 	Location pos1=null,pos2=null;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
@@ -168,7 +165,7 @@ public class Cinema extends JavaPlugin{
 			return true;
 		}
 		//csaveair <0/1>
-		if(cmd.getName().equalsIgnoreCase("csaveair")){
+		/*if(cmd.getName().equalsIgnoreCase("csaveair")){
 			if(args.length!=1){
 				return false;
 			}
@@ -184,7 +181,8 @@ public class Cinema extends JavaPlugin{
 			return true;
 		}
 		//cpos1 <x> <y> <z> <world>
-		else if(cmd.getName().equalsIgnoreCase("cpos1")){
+		else */
+		if(cmd.getName().equalsIgnoreCase("cpos1")){
 			if(sender instanceof Player){
 				if(args.length == 0){
 					//take player pos
@@ -229,7 +227,7 @@ public class Cinema extends JavaPlugin{
 				}
 			}
 		}
-		//csave filename
+		//csave filename index
 		else if(cmd.getName().equalsIgnoreCase("csave")){
 			if(pos1 == null || pos2 == null)
 			{
@@ -244,77 +242,24 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			String savefile= savePath+args[0];
-			try {
-				File file = new File(savefile);
-				
-				if(!file.exists()){
-					//create file
-					file.createNewFile();
-					RandomAccessFile raf2 = new RandomAccessFile(savefile,"rw");
-					raf2.writeInt(0);
-					raf2.close();
-					raf2 = null;
-				}
-				RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
-				int framecount = raf.readInt();
-				int posToSafe =0;
-				if(args.length == 2){
-					posToSafe = Math.min(Integer.parseInt(args[1]), framecount);
-				}else{
-					posToSafe = framecount;
-				}
-				framecount++;
-				raf.seek(0);//increment framecount and write back
-				raf.writeInt(framecount);
-				//raf.seek(raf.length());//jump to end of file
-				long rewrite = 0;
-				for(int i =0;i< posToSafe;i++){
-					int blocks = raf.readInt();
-					raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
-				}
-				rewrite = raf.getFilePointer();//store pos to write frame
-				byte[] ba = new byte[(int)(raf.length()-rewrite)];
-				for(int i =0;i<ba.length;i++){
-					ba[i]= raf.readByte();
-				}
-				raf.seek(rewrite);
-				//write all blocks of this frame
-				int minx = Math.min(pos1.getBlockX(), pos2.getBlockX());
-				int miny = Math.min(pos1.getBlockY(), pos2.getBlockY());
-				int minz = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-				int maxx = Math.max(pos1.getBlockX(), pos2.getBlockX());
-				int maxy = Math.max(pos1.getBlockY(), pos2.getBlockY());
-				int maxz = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
-				int blockcount = (maxx-minx+1)*(maxy-miny+1)*(maxz-minz+1);
-				sender.sendMessage(blockcount + " blocks");
-				raf.writeInt(blockcount);
-				for(int xx = minx;xx<=maxx;xx++){
-					for(int yy = miny;yy<=maxy;yy++){
-						for(int zz = minz;zz<=maxz;zz++){
-							if(saveair || !w.getBlockAt(xx, yy, zz).getType().equals(Material.AIR)){
-								raf.writeInt(xx-pos1.getBlockX());
-								raf.writeInt(yy-pos1.getBlockY());
-								raf.writeInt(zz-pos1.getBlockZ());
-								raf.writeInt(w.getBlockAt(xx, yy, zz).getType().getId());
-								raf.writeByte(w.getBlockAt(xx, yy, zz).getData());
-							}
-						}	
-					}
-				}
-				
-				raf.write(ba);//write back rest
-				raf.close();
-				sender.sendMessage("frame saved as frame index " + posToSafe);
-			} catch (FileNotFoundException e) {
-				sender.sendMessage("File not found");
+			return csave(args, w, sender);
+		}
+		//csavedelta file index
+		else if(cmd.getName().equalsIgnoreCase("csave")){
+			if(pos1 == null || pos2 == null)
+			{
+				sender.sendMessage("Positions were not set. cant continue");
 				return true;
 			}
-			catch (IOException e) {
-				sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
+			World w = pos1.getWorld();
+			if(args.length != 1 && args.length != 2){
+				return false;
+			}
+			if(pos1.getWorld() != pos2.getWorld()){
+				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			return true;
+			return csaveDelta(args, w, sender);
 		}
 		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis
 		else if(cmd.getName().equalsIgnoreCase("cplay")){
@@ -520,6 +465,175 @@ public class Cinema extends JavaPlugin{
 			return true;
 		}
 		return false;
-		
+	}
+
+	private boolean csaveDelta(String[] args, World w, CommandSender sender) {
+		String savefile= savePath+args[0];
+		try {
+			File file = new File(savefile);
+			
+			if(!file.exists()){
+				//create file
+				file.createNewFile();
+				RandomAccessFile raf2 = new RandomAccessFile(savefile,"rw");
+				raf2.writeInt(0);
+				raf2.close();
+				raf2 = null;
+			}
+			RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
+			int framecount = raf.readInt();
+			int posToSafe =0;
+			if(args.length == 2){
+				posToSafe = Math.min(Integer.parseInt(args[1]), framecount);
+			}else{
+				posToSafe = framecount;
+			}
+			framecount++;
+			raf.seek(0);//increment framecount and write back
+			raf.writeInt(framecount);
+			//raf.seek(raf.length());//jump to end of file
+			long rewrite = 0;
+			for(int i =0;i< posToSafe-1;i++){
+				int blocks = raf.readInt();
+				raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
+			}
+			int preBlocks = raf.readInt();
+			myBlock[] mba = new myBlock[preBlocks];
+			for(int i = 0;i<preBlocks;i++){
+				int x = raf.readInt();
+				int y = raf.readInt();
+				int z = raf.readInt();
+				mba[i] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
+			}
+			Frame preFrame = new Frame(mba,null);
+			
+			
+			rewrite = raf.getFilePointer();//store pos to write frame
+			byte[] ba = new byte[(int)(raf.length()-rewrite)];
+			for(int i =0;i<ba.length;i++){
+				ba[i]= raf.readByte();
+			}
+			raf.seek(rewrite);
+			//write all blocks of this frame
+			int minx = Math.min(pos1.getBlockX(), pos2.getBlockX());
+			int miny = Math.min(pos1.getBlockY(), pos2.getBlockY());
+			int minz = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+			int maxx = Math.max(pos1.getBlockX(), pos2.getBlockX());
+			int maxy = Math.max(pos1.getBlockY(), pos2.getBlockY());
+			int maxz = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+			int blockcount = (maxx-minx+1)*(maxy-miny+1)*(maxz-minz+1);
+			sender.sendMessage(blockcount + " blocks");
+			long blockCountPos = raf.getFilePointer();
+			//raf.writeInt(blockcount);
+			int nowx=0,nowy=0,nowz=0,nowmat=0,nowdata=0;
+			for(int xx = minx;xx<=maxx;xx++){
+				for(int yy = miny;yy<=maxy;yy++){
+					for(int zz = minz;zz<=maxz;zz++){
+						nowx = xx-pos1.getBlockX();
+						nowy = yy-pos1.getBlockY();
+						nowz = zz-pos1.getBlockZ();
+						nowmat = w.getBlockAt(xx, yy, zz).getType().getId();
+						nowdata = w.getBlockAt(xx, yy, zz).getData();
+						myBlock preblock = preFrame.getBlockAt(nowx, nowy, nowz);
+						if(preblock.m.getId() != nowmat && preblock.data != nowdata ){
+							raf.writeInt(nowx);
+							raf.writeInt(nowy);
+							raf.writeInt(nowz);
+							raf.writeInt(nowmat);
+							raf.writeByte(nowdata);
+						}else{
+							blockcount--;
+						}
+					}	
+				}
+			}
+			rewrite = raf.getFilePointer();
+			raf.seek(blockCountPos);
+			raf.writeInt(blockcount);
+			raf.seek(rewrite);
+			raf.write(ba);//write back rest
+			raf.close();
+			sender.sendMessage("frame saved as frame index " + posToSafe);
+		} catch (FileNotFoundException e) {
+			sender.sendMessage("File not found");
+			return true;
+		}
+		catch (IOException e) {
+			sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
+			return true;
+		}
+		return true;
+	}
+	
+	private boolean csave(String[] args, World w, CommandSender sender){
+		String savefile= savePath+args[0];
+		try {
+			File file = new File(savefile);
+			
+			if(!file.exists()){
+				//create file
+				file.createNewFile();
+				RandomAccessFile raf2 = new RandomAccessFile(savefile,"rw");
+				raf2.writeInt(0);
+				raf2.close();
+				raf2 = null;
+			}
+			RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
+			int framecount = raf.readInt();
+			int posToSafe =0;
+			if(args.length == 2){
+				posToSafe = Math.min(Integer.parseInt(args[1]), framecount);
+			}else{
+				posToSafe = framecount;
+			}
+			framecount++;
+			raf.seek(0);//increment framecount and write back
+			raf.writeInt(framecount);
+			//raf.seek(raf.length());//jump to end of file
+			long rewrite = 0;
+			for(int i =0;i< posToSafe;i++){
+				int blocks = raf.readInt();
+				raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
+			}
+			rewrite = raf.getFilePointer();//store pos to write frame
+			byte[] ba = new byte[(int)(raf.length()-rewrite)];
+			for(int i =0;i<ba.length;i++){
+				ba[i]= raf.readByte();
+			}
+			raf.seek(rewrite);
+			//write all blocks of this frame
+			int minx = Math.min(pos1.getBlockX(), pos2.getBlockX());
+			int miny = Math.min(pos1.getBlockY(), pos2.getBlockY());
+			int minz = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+			int maxx = Math.max(pos1.getBlockX(), pos2.getBlockX());
+			int maxy = Math.max(pos1.getBlockY(), pos2.getBlockY());
+			int maxz = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+			int blockcount = (maxx-minx+1)*(maxy-miny+1)*(maxz-minz+1);
+			sender.sendMessage(blockcount + " blocks");
+			raf.writeInt(blockcount);
+			for(int xx = minx;xx<=maxx;xx++){
+				for(int yy = miny;yy<=maxy;yy++){
+					for(int zz = minz;zz<=maxz;zz++){
+						raf.writeInt(xx-pos1.getBlockX());
+						raf.writeInt(yy-pos1.getBlockY());
+						raf.writeInt(zz-pos1.getBlockZ());
+						raf.writeInt(w.getBlockAt(xx, yy, zz).getType().getId());
+						raf.writeByte(w.getBlockAt(xx, yy, zz).getData());
+					}	
+				}
+			}
+			
+			raf.write(ba);//write back rest
+			raf.close();
+			sender.sendMessage("frame saved as frame index " + posToSafe);
+		} catch (FileNotFoundException e) {
+			sender.sendMessage("File not found");
+			return true;
+		}
+		catch (IOException e) {
+			sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
+			return true;
+		}
+		return true;
 	}
 }

@@ -7,11 +7,11 @@ import java.util.*;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 
-public class CinemaPlayer extends TimerTask {
+public class CinemaPlayer implements /*TimerTask*/Runnable {
 
 	
 	int playCount;
-	Timer t;
+	//Timer t;
 	Cinema c;
 	public CinemaFile cf;
 	
@@ -36,10 +36,16 @@ public class CinemaPlayer extends TimerTask {
 		new CinemaFileAsyncLoader(filePath, loc, setAir,restoreafterstop,false,sender,this).start();
 	}
 	
+	int frameTimetoTicks(int frameTime){
+		return Math.max(((frameTime+10)/20),1);
+	}
+	
+	int taskID=0;	
 	public void mystart(CommandSender sender){
 		players.put(name, this);
-		t = new Timer();
-		t.schedule(this, 0, frameTime);
+		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(c, this, 0, frameTimetoTicks(frameTime));
+		//t = new Timer();
+		//t.schedule(this, 0, frameTime);
 		sender.sendMessage("Player loaded with " + cf.frameCount() + " Frames");
 	}
 	
@@ -73,8 +79,9 @@ public class CinemaPlayer extends TimerTask {
 		nowframe = raf.readInt();
 		
 		cf = new CinemaFile(filePath, loc, setAir,restoreafterstop,raf);
-		t = new Timer();
-		t.schedule(this, 0, frameTime);
+		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(c, this, 0, frameTimetoTicks(frameTime));
+		//t = new Timer();
+		//t.schedule(this, 0, frameTime);
 	}
 	
 	int nowframe=0;
@@ -106,9 +113,10 @@ public class CinemaPlayer extends TimerTask {
 			return;//so noone tries to stop this thing twice. (unlucky stop after atend=true;)
 		}
 		stopped = true;
-		t.cancel();
-		t.purge();
-		t=null;
+		//t.cancel();
+		//t.purge();
+		//t=null;
+		Bukkit.getScheduler().cancelTask(taskID);
 		while(!atEnd){
 			try {
 				Thread.sleep(0);

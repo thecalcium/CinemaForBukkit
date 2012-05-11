@@ -1,16 +1,11 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.51
+version: 1.6
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
       default: op
 commands:
-   csaveair:
-      description: If set to one, air blocks will be saved to a frame, otherwise not
-      usage: /csaveair <1/0>
-      permission: Cinema.basic
-      permission-message: You don't have permission
    cpos1:
       description: Sets the first position to the position of the player, or to the given x, y and z. If used by console you have to specify the world too
       usage: /cpos1 [x] [y] [z] [[worldname if console]]
@@ -24,6 +19,11 @@ commands:
    csave:
       description: Saves the frame marked by the two positions to the given file. If file does not exist it will be created. Optionally you can specify the frame index to save. /csave test 0 saves as first frame
       usage: /csave <filename> [framenumber]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   csavedelta:
+      description: Saves the frame marked by the two positions to the given file as Delta Frame. If file does not exist it will be created. Optionally you can specify the frame index to save. /csave test 0 saves as first frame. Delta means it saves just the differences from the frame before to this Frame
+      usage: /csavedelta <filename> [framenumber]
       permission: Cinema.basic
       permission-message: You don't have permission
    cplay:
