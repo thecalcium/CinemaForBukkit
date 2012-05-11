@@ -51,31 +51,34 @@ public class CinemaSaver extends Thread {
 			}
 			RandomAccessFile raf = new RandomAccessFile(savefile,"rw");
 			int framecount = raf.readInt();
-			int posToSafe =0;
+			int posToSave =0;
 			if(args.length == 2){
-				posToSafe = Math.min(Integer.parseInt(args[1]), framecount);
+				posToSave = Math.min(Integer.parseInt(args[1]), framecount);
 			}else{
-				posToSafe = framecount;
+				posToSave = framecount;
 			}
 			framecount++;
 			raf.seek(0);//increment framecount and write back
 			raf.writeInt(framecount);
 			//raf.seek(raf.length());//jump to end of file
 			long rewrite = 0;
-			for(int i =0;i< posToSafe-1;i++){
+			for(int i =0;i< posToSave-1;i++){
 				int blocks = raf.readInt();
 				raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
 			}
-			int preBlocks = raf.readInt();
-			myBlock[] mba = new myBlock[preBlocks];
-			for(int i = 0;i<preBlocks;i++){
-				int x = raf.readInt();
-				int y = raf.readInt();
-				int z = raf.readInt();
-				mba[i] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
-			}
-			Frame preFrame = new Frame(mba,null);
 			
+			Frame preFrame=null;
+			if(posToSave >0){
+				int preBlocks = raf.readInt();
+				myBlock[] mba = new myBlock[preBlocks];
+				for(int i = 0;i<preBlocks;i++){
+					int x = raf.readInt();
+					int y = raf.readInt();
+					int z = raf.readInt();
+					mba[i] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
+				}
+				preFrame = new Frame(mba,null);
+			}
 			
 			rewrite = raf.getFilePointer();//store pos to write frame
 			byte[] ba = new byte[(int)(raf.length()-rewrite)];
@@ -91,9 +94,8 @@ public class CinemaSaver extends Thread {
 			int maxy = Math.max(pos1.getBlockY(), pos2.getBlockY());
 			int maxz = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
 			int blockcount = (maxx-minx+1)*(maxy-miny+1)*(maxz-minz+1);
-			sender.sendMessage(blockcount + " blocks");
 			long blockCountPos = raf.getFilePointer();
-			//raf.writeInt(blockcount);
+			raf.writeInt(blockcount);//write it now so i dont overwrite other stuff later
 			int nowx=0,nowy=0,nowz=0,nowmat=0,nowdata=0;
 			for(int xx = minx;xx<=maxx;xx++){
 				for(int yy = miny;yy<=maxy;yy++){
@@ -103,26 +105,35 @@ public class CinemaSaver extends Thread {
 						nowz = zz-pos1.getBlockZ();
 						nowmat = w.getBlockAt(xx, yy, zz).getType().getId();
 						nowdata = w.getBlockAt(xx, yy, zz).getData();
-						myBlock preblock = preFrame.getBlockAt(nowx, nowy, nowz);
-						if(preblock.m.getId() != nowmat && preblock.data != nowdata ){
+						if(posToSave >0){
+							myBlock preblock = preFrame.getBlockAt(nowx, nowy, nowz);
+							if(preblock == null && preblock.m.getId() != nowmat && preblock.data != nowdata ){
+								raf.writeInt(nowx);
+								raf.writeInt(nowy);
+								raf.writeInt(nowz);
+								raf.writeInt(nowmat);
+								raf.writeByte(nowdata);
+							}else{
+								blockcount--;
+							}
+						}else{
 							raf.writeInt(nowx);
 							raf.writeInt(nowy);
 							raf.writeInt(nowz);
 							raf.writeInt(nowmat);
 							raf.writeByte(nowdata);
-						}else{
-							blockcount--;
 						}
 					}	
 				}
 			}
+			sender.sendMessage(blockcount + " blocks");
 			rewrite = raf.getFilePointer();
 			raf.seek(blockCountPos);
 			raf.writeInt(blockcount);
 			raf.seek(rewrite);
 			raf.write(ba);//write back rest
 			raf.close();
-			sender.sendMessage("frame saved as frame index " + posToSafe);
+			sender.sendMessage("frame saved as frame index " + posToSave);
 		} catch (FileNotFoundException e) {
 			sender.sendMessage("File not found");
 			return true;
