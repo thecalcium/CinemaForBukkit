@@ -241,7 +241,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			new CinemaSaver(args, w, sender, false, savePath, pos1, pos1);
+			new CinemaSaver(args, w, sender, false, savePath, pos1, pos1).start();
 			return true;
 		}
 		//csavedelta file index
@@ -259,7 +259,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			new CinemaSaver(args, w, sender, true, savePath, pos1, pos1);
+			new CinemaSaver(args, w, sender, true, savePath, pos1, pos1).start();
 			return true;
 		}
 		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis
