@@ -127,7 +127,6 @@ public class CinemaSaver extends Thread {
 						if(posToSave >0){
 							myBlock preblock = preFrame.getBlockAt(nowx, nowy, nowz);
 							if(preblock!= null){
-								sender.sendMessage(preblock.toString());
 								if(preblock.m.getId() != nowmat || preblock.data != nowdata ){
 									raf.writeInt(nowx);
 									raf.writeInt(nowy);
