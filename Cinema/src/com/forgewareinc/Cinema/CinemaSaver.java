@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,7 +21,9 @@ public class CinemaSaver extends Thread {
 	String savePath;
 	Location pos1;
 	Location pos2;
+	Logger log;
 	public CinemaSaver(String[] args, World w, CommandSender sender,boolean delta,String savePath,Location pos1,Location pos2){
+		log = Bukkit.getLogger();
 		this.args = args;
 		this.w = w;
 		this.sender = sender;
@@ -36,8 +40,8 @@ public class CinemaSaver extends Thread {
 			csave();
 		}
 	}
-	@SuppressWarnings("null")//the warning is wrong. i check for one condition. it will be not null if the conidition is true and it will just be used then
-	private boolean csaveDelta() {
+
+	private void csaveDelta() {
 		String savefile= savePath+args[0];
 		try {
 			File file = new File(savefile);
@@ -63,13 +67,27 @@ public class CinemaSaver extends Thread {
 			raf.writeInt(framecount);
 			//raf.seek(raf.length());//jump to end of file
 			long rewrite = 0;
-			for(int i =0;i< posToSave-1;i++){
-				int blocks = raf.readInt();
-				raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
-			}
-			
 			Frame preFrame=null;
-			if(posToSave >0){
+			myBlockBuffer preblocks = new myBlockBuffer();
+			if(posToSave>0){
+				for(int i =0;i< posToSave;i++){
+					int blocks = raf.readInt();//build frame from all pre frames
+					for(int b = 0; b < blocks;b++){
+						int x = raf.readInt();
+						int y = raf.readInt();
+						int z = raf.readInt();
+						myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
+						preblocks.add(mb);
+					}
+					//raf.seek(raf.getFilePointer()+17*blocks);//each block 4 ints and one byte = 17
+				}
+			}
+			myBlock[] mba = preblocks.toArray();
+			preblocks = null;
+			preFrame = new Frame(mba,null);
+			
+			
+			/*if(posToSave >0){
 				int preBlocks = raf.readInt();
 				myBlock[] mba = new myBlock[preBlocks];
 				for(int i = 0;i<preBlocks;i++){
@@ -79,7 +97,7 @@ public class CinemaSaver extends Thread {
 					mba[i] = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				}
 				preFrame = new Frame(mba,null);
-			}
+			}*/
 			
 			rewrite = raf.getFilePointer();//store pos to write frame
 			byte[] ba = new byte[(int)(raf.length()-rewrite)];
@@ -108,14 +126,23 @@ public class CinemaSaver extends Thread {
 						nowdata = w.getBlockAt(xx, yy, zz).getData();
 						if(posToSave >0){
 							myBlock preblock = preFrame.getBlockAt(nowx, nowy, nowz);
-							if(preblock == null && preblock.m.getId() != nowmat && preblock.data != nowdata ){
+							if(preblock!= null){
+								sender.sendMessage(preblock.toString());
+								if(preblock.m.getId() != nowmat || preblock.data != nowdata ){
+									raf.writeInt(nowx);
+									raf.writeInt(nowy);
+									raf.writeInt(nowz);
+									raf.writeInt(nowmat);
+									raf.writeByte(nowdata);
+								}else{
+									blockcount--;
+								}
+							}else{
 								raf.writeInt(nowx);
 								raf.writeInt(nowy);
 								raf.writeInt(nowz);
 								raf.writeInt(nowmat);
 								raf.writeByte(nowdata);
-							}else{
-								blockcount--;
 							}
 						}else{
 							raf.writeInt(nowx);
@@ -137,16 +164,14 @@ public class CinemaSaver extends Thread {
 			sender.sendMessage("frame saved as frame index " + posToSave);
 		} catch (FileNotFoundException e) {
 			sender.sendMessage("File not found");
-			return true;
 		}
 		catch (IOException e) {
 			sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
-			return true;
+			log.info(e.getMessage());
 		}
-		return true;
 	}
 	
-	private boolean csave(){
+	private void csave(){
 		String savefile= savePath+args[0];
 		try {
 			File file = new File(savefile);
@@ -209,12 +234,9 @@ public class CinemaSaver extends Thread {
 			sender.sendMessage("frame saved as frame index " + posToSafe);
 		} catch (FileNotFoundException e) {
 			sender.sendMessage("File not found");
-			return true;
 		}
 		catch (IOException e) {
 			sender.sendMessage("Some IOException occured. maybe the server (bukkit) has no write access on the hdd. it doesnt change anything if you are op or whatever rank");
-			return true;
 		}
-		return true;
 	}
 }

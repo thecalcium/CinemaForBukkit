@@ -26,7 +26,7 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
 	public static final String savePath = "plugins/cinema/";
-	public static final int version = 160;
+	public static final int version = 161;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -241,11 +241,11 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			new CinemaSaver(args, w, sender, false, savePath, pos1, pos1).start();
+			new CinemaSaver(args, w, sender, false, savePath, pos1, pos2).start();
 			return true;
 		}
 		//csavedelta file index
-		else if(cmd.getName().equalsIgnoreCase("csave")){
+		else if(cmd.getName().equalsIgnoreCase("csavedelta")){
 			if(pos1 == null || pos2 == null)
 			{
 				sender.sendMessage("Positions were not set. cant continue");
@@ -259,7 +259,7 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage("both positions have to be in the same world");
 				return true;
 			}
-			new CinemaSaver(args, w, sender, true, savePath, pos1, pos1).start();
+			new CinemaSaver(args, w, sender, true, savePath, pos1, pos2).start();
 			return true;
 		}
 		//cplay playername filename 0/1setair playcount 0/1restoreafterstop framedurationInMillis
