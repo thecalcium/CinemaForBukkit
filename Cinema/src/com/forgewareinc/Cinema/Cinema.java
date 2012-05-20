@@ -26,7 +26,7 @@ public class Cinema extends JavaPlugin{
 	public static final String configPath = "plugins/cinema.cfg";
 	public static final String persistentPath = "plugins/cinemafile";
 	public static final String savePath = "plugins/cinema/";
-	public static final int version = 161;
+	public static final int version = 162;
 	public static int newestVersion = version;
 	
 	public boolean newVersionAvail(){
@@ -119,10 +119,24 @@ public class Cinema extends JavaPlugin{
 			RandomAccessFile raf;
 			try {
 				raf = new RandomAccessFile(input,"r");
-				int playercount = raf.readInt();
-				for(int i = 0;i < playercount;i++){
-					CinemaPlayer cp = new CinemaPlayer(raf, this);
-					CinemaPlayer.players.put(cp.name, cp);
+				int version = raf.readInt();
+				if(version < Integer.MAX_VALUE/2){
+					//old version
+					int playercount = version;
+					for(int i = 0;i < playercount;i++){
+						CinemaPlayer cp = new CinemaPlayer(raf, this,false);
+						CinemaPlayer.players.put(cp.name, cp);
+					}
+				}else{
+					switch(version){
+					case Integer.MAX_VALUE://1.62
+						int playercount = raf.readInt();
+						for(int i = 0;i < playercount;i++){
+							CinemaPlayer cp = new CinemaPlayer(raf, this,true);//this is the problem. reading reverse and played (forgot played earlier)
+							CinemaPlayer.players.put(cp.name, cp);
+						}
+						break;
+					}
 				}
 				raf.close();
 			} catch (FileNotFoundException e) {} catch (IOException e) {log.info("Error loading a persistent player: " + e.getMessage());}
@@ -142,6 +156,9 @@ public class Cinema extends JavaPlugin{
 		}
 		try {
 			RandomAccessFile raf = new RandomAccessFile(output,"rw");
+			//1.62
+			raf.writeInt(Integer.MAX_VALUE);
+			
 			raf.writeInt(CinemaPlayer.players.size());
 			for(String key: CinemaPlayer.players.keySet()){
 				CinemaPlayer.players.get(key).writeToCinemaFile(raf);
@@ -463,6 +480,20 @@ public class Cinema extends JavaPlugin{
 				sender.sendMessage(i + ": " + al.name());
 				i++;
 			}
+			return true;
+		}
+		//creverse
+		else if(cmd.getName().equalsIgnoreCase("creverse")){
+			if(args.length!=1){
+				return false;
+			}
+			if(!CinemaPlayer.players.containsKey(args[0])){
+				sender.sendMessage("no such ID");
+				return true;
+			}
+			CinemaPlayer cp = CinemaPlayer.players.get(args[0]);
+			cp.reverse = !cp.reverse;
+			sender.sendMessage("Player reversed");
 			return true;
 		}
 		return false;

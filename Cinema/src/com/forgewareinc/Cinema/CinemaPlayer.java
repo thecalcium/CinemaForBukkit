@@ -15,6 +15,8 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 	Cinema c;
 	public CinemaFile cf;
 	
+	public boolean reverse = false;
+	
 	String name;
 	String filePath;
 	boolean setAir=true;
@@ -49,6 +51,22 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 		sender.sendMessage("Player loaded with " + cf.frameCount() + " Frames");
 	}
 	
+	/*public void writeToCinemaFileOLD(RandomAccessFile raf) throws IOException{
+		raf.writeUTF(name);
+		raf.writeUTF(filePath);
+		raf.writeBoolean(setAir);
+		raf.writeInt(playCount-(int)(played/cf.frameCount()));
+		raf.writeBoolean(restoreafterstop);
+		raf.writeInt(frameTime);
+		raf.writeInt(loc.getBlockX());
+		raf.writeInt(loc.getBlockY());
+		raf.writeInt(loc.getBlockZ());
+		raf.writeUTF(loc.getWorld().getName());
+		raf.writeInt(nowframe);
+		
+		cf.writeToCinemaFile(raf);
+	}*/
+	
 	public void writeToCinemaFile(RandomAccessFile raf) throws IOException{
 		raf.writeUTF(name);
 		raf.writeUTF(filePath);
@@ -61,10 +79,15 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 		raf.writeInt(loc.getBlockZ());
 		raf.writeUTF(loc.getWorld().getName());
 		raf.writeInt(nowframe);
+		
+		//1.62
+		raf.writeInt(played);
+		raf.writeBoolean(reverse);
+		
 		cf.writeToCinemaFile(raf);
 	}
 	
-	public CinemaPlayer(RandomAccessFile raf,Cinema c) throws IOException{
+	public CinemaPlayer(RandomAccessFile raf,Cinema c,boolean after162) throws IOException{
 
 		this.c = c;
 		
@@ -78,7 +101,20 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 		this.loc = new Location(Bukkit.getWorld(raf.readUTF()), x, y, z);
 		nowframe = raf.readInt();
 		
+		//1.62
+		if(after162){
+		played = raf.readInt();
+		reverse = raf.readBoolean();
+		}
+		
+		
 		cf = new CinemaFile(filePath, loc, setAir,restoreafterstop,raf);
+		if(nowframe >= cf.frameCount()){
+			nowframe = 0;
+		}
+		if(nowframe < 0){
+			nowframe = cf.frameCount();
+		}
 		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(c, this, 0, frameTimetoTicks(frameTime));
 		//t = new Timer();
 		//t.schedule(this, 0, frameTime);
@@ -91,9 +127,17 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 	public void run() {
 		atEnd = false;
 		cf.fa[nowframe].Draw(setAir);
-		nowframe++;
+		if(reverse){
+			nowframe--;
+		}else{
+			nowframe++;
+		}
+		//nowframe = nowframe % cf.frameCount();
 		if(nowframe >= cf.frameCount()){
 			nowframe = 0;
+		}
+		if(nowframe < 0){
+			nowframe = cf.frameCount()-1;
 		}
 		atEnd = true;
 		if(playCount != 0 && !stopped){
@@ -127,7 +171,6 @@ public class CinemaPlayer implements /*TimerTask*/Runnable {
 	}
 
 	public void removeDueToEx() {
-		//c.players.remove(name);
 		players.remove(name);
 	}
 	

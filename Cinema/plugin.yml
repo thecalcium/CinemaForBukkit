@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.61
+version: 1.62
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -89,5 +89,10 @@ commands:
    cinemagifalignments:
       description: lists all available alignments
       usage: /cinemagifalignments
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   creverse:
+      description: reverses the given player
+      usage: /creverse <ID>
       permission: Cinema.basic
       permission-message: You don't have permission
