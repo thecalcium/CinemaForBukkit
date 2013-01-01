@@ -56,7 +56,7 @@ public class Cinema extends JavaPlugin{
 		//look for new version
 		if(newVersionAvail()){
 			log.info("NEW VERSION AVAILABLE FOR CINEMA PLUGIN!!! you have "+ version + " and the newest version is " + newestVersion);
-	    	log.info("get it here: https://sourceforge.net/projects/cinemaforbukkit/files/");
+	    	log.info("get it here: http://dev.bukkit.org/server-mods/cinema/files/");
 		}
 		
 		
