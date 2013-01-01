@@ -321,8 +321,8 @@ public class Cinema extends JavaPlugin{
 				return true;
 			}
 		}
-		//cinfo
-		else if(cmd.getName().equalsIgnoreCase("cinfo")){
+		//cinemainfo
+		else if(cmd.getName().equalsIgnoreCase("cinemainfo")){
 			if(pos1 != null){
 				sender.sendMessage("pos1: " + pos1.getBlockX() + " "+pos1.getBlockY() + " "+ pos1.getBlockZ());
 			}else{
@@ -440,8 +440,13 @@ public class Cinema extends JavaPlugin{
 			if(args.length!=3){
 				return false;
 			}
-			if(Integer.parseInt(args[2])<0 ||Integer.parseInt(args[2])>4){
-				sender.sendMessage("invalid alignment");
+			try{
+				if(Integer.parseInt(args[2])<0 ||Integer.parseInt(args[2])>4){
+					sender.sendMessage("invalid alignment");
+					return true;
+				}
+			}catch(Exception e){
+				sender.sendMessage("please specify the number, and not the name of the alignment(the first sign in each line)");
 				return true;
 			}
 			Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("gif");

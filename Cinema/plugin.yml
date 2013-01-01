@@ -1,6 +1,6 @@
 name: Cinema
 main: com.forgewareinc.Cinema.Cinema
-version: 1.62
+version: 1.63
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -36,9 +36,9 @@ commands:
       usage: /cstop <ID>
       permission: Cinema.basic
       permission-message: You don't have permission
-   cinfo:
+   cinemainfo:
       description: shows pos1, pos2 and the version of this Plugin. Also notifys you if there is a new version available
-      usage: /cinfo
+      usage: /cinemainfo
       permission: Cinema.basic
       permission-message: You don't have permission
    cplayers:
