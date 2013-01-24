@@ -28,19 +28,22 @@ public class Cinema extends JavaPlugin{
 	public static final String savePath = "plugins/cinema/";
 	public static final int version = 163;
 	public static int newestVersion = version;
+	public static boolean checkForNewVersion=true;
 	
 	public boolean newVersionAvail(){
-		try {
-		    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
-		    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-		    newestVersion = Integer.parseInt(in.readLine());
-		    if(newestVersion > version){
-		    	return true;
-		    }
-		    in.close();
-		} catch (MalformedURLException e) {
-		} catch (IOException e) {
-			log.info("couldnt look up version for cinema. host not reachable?");
+		if(checkForNewVersion){
+			try {
+			    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
+			    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+			    newestVersion = Integer.parseInt(in.readLine());
+			    in.close();
+			    if(newestVersion > version){
+			    	return true;
+			    }
+			} catch (MalformedURLException e) {
+			} catch (IOException e) {
+				log.info("couldnt look up version for cinema. host not reachable?");
+			}
 		}
 		return false;
 	}
@@ -52,6 +55,8 @@ public class Cinema extends JavaPlugin{
 		
 		//create folders in plugins...
 		new File("plugins/cinema").mkdirs();
+		
+		checkForNewVersion=this.getConfig().getBoolean("Plugin.CheckForNewVersion");
 		
 		//look for new version
 		if(newVersionAvail()){
