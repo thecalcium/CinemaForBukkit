@@ -31,7 +31,7 @@ public class Cinema extends JavaPlugin{
 	public static boolean checkForNewVersion=true;
 	
 	public boolean newVersionAvail(){
-		if(checkForNewVersion){
+		/*if(checkForNewVersion){
 			try {
 			    URL url = new URL("http://fredlllll.fr.ohost.de/cinemaversion.txt");
 			    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -44,7 +44,7 @@ public class Cinema extends JavaPlugin{
 			} catch (IOException e) {
 				log.info("couldnt look up version for cinema. host not reachable?");
 			}
-		}
+		}*/
 		return false;
 	}
 	
@@ -74,16 +74,17 @@ public class Cinema extends JavaPlugin{
 			log.info("Cinema config not found. generating...");
 			//generate file
 			File temp = new File(configPath);
-			try {temp.createNewFile();} catch (IOException e1) {/*cant create file*/ log.info("cant create new cinema config file. using defaults");return; }
-			PrintWriter pw = null;
-			try {pw = new PrintWriter(new FileOutputStream(configPath));} catch (FileNotFoundException e1) {/*cant happen*/}
-			pw.println("setair=" + defaultSetAir);
-			pw.println("playcount=" + defaultPlayCount);
-			pw.println("restoreafterstop=" + defaultRestoreAfterStop);
-			pw.println("frameduration=" + defaultFrameDuration);
-			pw.close();
-			try {fstream = new FileInputStream(configPath);} catch (FileNotFoundException e1) {/*cant happen*/}
-			log.info("generated new Ciname config file");
+			try {temp.createNewFile();
+				PrintWriter pw = null;
+				try {pw = new PrintWriter(new FileOutputStream(configPath));} catch (FileNotFoundException e1) {/*cant happen*/}
+				pw.println("setair=" + defaultSetAir);
+				pw.println("playcount=" + defaultPlayCount);
+				pw.println("restoreafterstop=" + defaultRestoreAfterStop);
+				pw.println("frameduration=" + defaultFrameDuration);
+				pw.close();
+				try {fstream = new FileInputStream(configPath);} catch (FileNotFoundException e1) {/*cant happen*/}
+				log.info("generated new Ciname config file");
+			} catch (IOException e1) {/*cant create file*/ log.info("cant create new cinema config file. using defaults");}
 		}
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
