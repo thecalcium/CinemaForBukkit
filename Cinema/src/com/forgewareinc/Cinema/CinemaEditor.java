@@ -1,9 +1,12 @@
 package com.forgewareinc.Cinema;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+
+import de.codolith.Cinema.Cinema;
 
 public class CinemaEditor {
 
@@ -16,7 +19,7 @@ public class CinemaEditor {
 		sender.sendMessage("Loaded file into Cinemaeditor with " + cf.frameCount() + " frames");
 		this.sender = sender;
 	}
-	
+
 	public void deleteFrame(int frameIndex){
 		if(cf.deleteFrame(frameIndex)){
 			sender.sendMessage("Deleted Frame "+frameIndex);
