@@ -24,7 +24,10 @@ public class Cpos2_Executor implements CommandExecutor{
 			Player player = (Player) sender;
 			if(args.length == 0){
 				//take player pos
-				cinema.getRegion().setPos1(player.getLocation());
+				cinema.getRegion().setPos2(player.getLocation());
+				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
+				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
+				return true;
 			}else if(args.length == 3){
 				int x,y,z;
 				try{
@@ -46,7 +49,8 @@ public class Cpos2_Executor implements CommandExecutor{
 					return true;
 				}
 				cinema.getRegion().setPos2(new Location(player.getWorld(), x,y,z));
-				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2());
+				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
+				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
 				return true;
 			}
 		}else{ //is console
@@ -77,7 +81,8 @@ public class Cpos2_Executor implements CommandExecutor{
 					return true;
 				}
 				cinema.getRegion().setPos2(new Location(world,x,y,z));
-				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2());
+				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
+				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
 				return true;
 			}
 		}

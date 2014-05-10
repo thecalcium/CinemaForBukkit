@@ -15,6 +15,7 @@ public class myBlock {
 		this.m = m;
 		this.data = data;
 	}
+	@SuppressWarnings("deprecation")
 	public myBlock(Block b){
 		this.x = b.getX();
 		this.y = b.getY();
@@ -23,6 +24,7 @@ public class myBlock {
 		this.data = b.getData();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String toString(){
 		return "myblock: X: "+x+" Y: "+y+" Z: "+z+" Mat: " +m.getId()+" data: "+data;
 	}

@@ -6,6 +6,7 @@ import org.bukkit.SandstoneType;
 
 public class Color {
 	static SandstoneType sstsmooth = SandstoneType.SMOOTH;
+	@SuppressWarnings("deprecation")
 	public static Color[] colors = new Color[]{
 		//new Color(147,147,147,,0),//strange grass top?
 		new Color(122,122,122,Material.COBBLESTONE.getId(),(byte)0),//cobblestone
@@ -318,6 +319,7 @@ public class Color {
 		this(r,g,b,0,(byte)0);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static myBlock fromColor(int x, int y, int z, int rgba){
 		int red = (rgba >> 16) & 0xFF; //R-Wert
         int green =(rgba >> 8) & 0xFF; //G-Wert

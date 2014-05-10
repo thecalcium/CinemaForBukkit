@@ -22,6 +22,7 @@ public class UndoMaker extends Thread{
 	
 	public UndoMaker(){}
 	
+	@SuppressWarnings("deprecation")
 	public UndoMaker(RandomAccessFile raf,World w) throws IOException{
 		this.w = w;
 		int count=0;
@@ -41,6 +42,7 @@ public class UndoMaker extends Thread{
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void run(){
 		//if(oldBlocks==null){return;}
 		Set<String> keys = oldBlocks.keySet();
@@ -60,6 +62,7 @@ public class UndoMaker extends Thread{
 		oldBlocks = null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void writeToCinemaFile(RandomAccessFile raf) throws IOException{
 		raf.writeInt(oldBlocks.size());
 		for(String key : oldBlocks.keySet()){

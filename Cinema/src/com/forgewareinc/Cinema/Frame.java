@@ -56,6 +56,7 @@ public class Frame {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void Draw(boolean setAir){
 		for(int i = 0; i < mba.length; i++){
 			Block b = w.getBlockAt(mba[i].x, mba[i].y, mba[i].z);
@@ -79,6 +80,7 @@ public class Frame {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void Draw(boolean setAir, Location l,UndoMaker um) {
 		int xx = l.getBlockX();
 		int yy = l.getBlockY();

@@ -21,17 +21,20 @@ public class Cinemainfo_Executor implements CommandExecutor{
 		Location pos1 = cinema.getRegion().getPos1();
 		Location pos2 = cinema.getRegion().getPos2();
 		if(pos1 != null){
-			sender.sendMessage("Position 1: " + pos1);
+			sender.sendMessage("Position 1: " + cinema.getRegion().getPos1AsString());
 		}else{
 			sender.sendMessage("Position 1 not set");
 		}
 		if(pos2 != null){
-			sender.sendMessage("Position 2: " + pos2);
+			sender.sendMessage("Position 2: " + cinema.getRegion().getPos2AsString());
 		}else{
 			sender.sendMessage("Position 2 not set");
 		}
 		if(pos1 != null && pos2 != null){
 			sender.sendMessage("Blocks currently selected: "+cinema.getRegion().getBlockCount());
+		}
+		if(cinema.getConfig().getBoolean("Plugin.ShowApiKeyInInfo") && cinema.getConfig().contains("Plugin.ApiKey")){
+			sender.sendMessage("ApiKey: "+cinema.getConfig().getString("Plugin.ApiKey"));
 		}
 		sender.sendMessage("Cinema Version: "+Cinema.version);
 		if(cinema.getConfig().getBoolean("Plugin.CheckForNewVersion")){

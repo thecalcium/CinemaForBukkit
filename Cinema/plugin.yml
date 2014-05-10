@@ -27,12 +27,12 @@ commands:
       permission: Cinema.basic
       permission-message: You don't have permission
    cinsert:
-      description: Inserts the frame marked by the two positions into the given file. Negative indices are allowed. -1 would insert before the last frame.
+      description: Inserts the frame marked by the two positions into the given file. Negative indices are allowed. -1 would insert before the last frame. Can lead to unwated results if used with delta frames
       usage: /cinsert <filename> <framenumber>
       permission: Cinema.basic
       permission-message: You don't have permission
    cinsertdelta:
-      description: Inserts the frame marked by the two positions into the given file as Delta Frame. Negative indices are allowed. -1 would insert before the last frame.
+      description: Inserts the frame marked by the two positions into the given file as Delta Frame. Negative indices are allowed. -1 would insert before the last frame. Can lead to unwated results if used with delta frames
       usage: /cinsertdelta <filename> <framenumber>
       permission: Cinema.basic
       permission-message: You don't have permission

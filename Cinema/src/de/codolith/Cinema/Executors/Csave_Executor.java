@@ -16,6 +16,7 @@ public class Csave_Executor implements CommandExecutor{
 	
 	public Csave_Executor(Cinema cinema, boolean delta){
 		this.cinema = cinema;
+		this.delta = delta;
 	}
 	
 	private boolean delta;

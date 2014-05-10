@@ -15,8 +15,9 @@ public class CinemaFile {
 	private LinkedList<Frame> frames = new LinkedList<Frame>();
 	
 	public CinemaFile(File file) throws IOException{
+		this.file = file;
+		this.name = file.getName();
 		if(file.exists()){
-			this.file = file;
 			RandomAccessFile raf = new RandomAccessFile(file, "r");
 			String id = raf.readUTF();
 			if(!fileID.equals(id)){

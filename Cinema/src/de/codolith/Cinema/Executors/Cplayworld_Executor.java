@@ -25,7 +25,7 @@ public class Cplayworld_Executor implements CommandExecutor{
 	///cplayworld <ID> <filename> <x> <y> <z> <world> [framedurationInMillis=250] [playcount=0]
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if(args.length >= 6 || args.length <= 8){
+		if(args.length >= 6 && args.length <= 8){
 			String id = args[0];
 			String anim = args[1];
 			

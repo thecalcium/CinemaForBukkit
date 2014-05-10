@@ -1,12 +1,9 @@
 package com.forgewareinc.Cinema;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-
-import de.codolith.Cinema.Cinema;
 
 public class CinemaEditor {
 

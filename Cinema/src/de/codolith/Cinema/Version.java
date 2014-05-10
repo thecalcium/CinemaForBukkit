@@ -66,7 +66,7 @@ public class Version {
 	}
 	
 	private void parseFromString(String str){
-		String[] sa = str.split(".");
+		String[] sa = str.split("\\.");
 		if (sa.length>0){
 			major = Integer.parseInt(sa[0]);
 			if(sa.length>1){

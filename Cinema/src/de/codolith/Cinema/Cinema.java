@@ -1,6 +1,7 @@
 package de.codolith.Cinema;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,17 +38,24 @@ public class Cinema extends JavaPlugin
 	{
 		versionChecker.check();
 		// version name is like "Cinema v*.*.*.*"
-		String[] sa = versionChecker.getVersionName().split(" ", 2);
-		sa[1] = sa[1].substring(1); // getting rid of the v
-		try
+		if (versionChecker.getVersionName() != null)
 		{
-			return new Version(sa[1]);
+			String[] sa = versionChecker.getVersionName().split(" ", 2);
+			if (sa.length == 2)
+			{
+				sa[1] = sa[1].substring(1); // getting rid of the v
+				try
+				{
+					return new Version(sa[1]);
+				}
+				catch (Exception e)
+				{ // if we cant handle our shit we will just use
+					// the lowest possible version
+					return new Version(0, 0, 0, 0);
+				}
+			}
 		}
-		catch (Exception e)
-		{ // if we cant handle our shit we will just use
-			// the lowest possible version
-			return new Version(0, 0, 0, 0);
-		}
+		return new Version(0, 0, 0, 0);
 	}
 
 	public File getExtDataFolder()
@@ -78,6 +86,7 @@ public class Cinema extends JavaPlugin
 		// create folders in plugins...
 		dataFolder.mkdirs();
 
+		saveDefaultConfig(); // does not overwrite
 		reloadConfig();
 		// version check
 		if (this.getConfig().contains("Plugin.ApiKey"))
@@ -146,8 +155,11 @@ public class Cinema extends JavaPlugin
 	{
 		try
 		{
-			RestorationFile rf = new RestorationFile(this, restorationFile);
-			rf.addTo(players);
+			new RestorationFile(this, restorationFile); // auto restores everything
+		}
+		catch (FileNotFoundException fnfe)
+		{
+			// well no players then
 		}
 		catch (IOException e)
 		{
@@ -160,7 +172,7 @@ public class Cinema extends JavaPlugin
 	{
 		try
 		{
-			RestorationFile rf = new RestorationFile(players);
+			RestorationFile rf = new RestorationFile(this);
 			rf.save(restorationFile);
 		}
 		catch (IOException e)

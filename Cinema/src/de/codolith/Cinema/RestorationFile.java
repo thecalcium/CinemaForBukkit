@@ -3,18 +3,20 @@ package de.codolith.Cinema;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.LinkedList;
-import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 public class RestorationFile {
 	
 	public static final int fileVersion = 0;
 	public static final String fileID = "cinemaRestore";
 	
-	private List<CinemaPlayer> players;
+	private Cinema cinema;
 	
 	public RestorationFile(Cinema cinema, File file) throws IOException{
-		players = new LinkedList<CinemaPlayer>();
+		this.cinema = cinema;
 		RandomAccessFile raf = new RandomAccessFile(file, "r");
 		String id = raf.readUTF();
 		if(!id.equals(fileID)){
@@ -24,9 +26,29 @@ public class RestorationFile {
 		int version = raf.readInt();
 		switch(version){
 		case 0:
+			boolean oneSet = raf.readBoolean();
+			if(oneSet){
+				int x = raf.readInt();
+				int y = raf.readInt();
+				int z = raf.readInt();
+				World world = Bukkit.getWorld(raf.readUTF());
+				if(world != null){
+					cinema.getRegion().setPos1(new Location(world,x,y,z));
+				}
+			}
+			boolean twoSet = raf.readBoolean();
+			if(twoSet){
+				int x = raf.readInt();
+				int y = raf.readInt();
+				int z = raf.readInt();
+				World world = Bukkit.getWorld(raf.readUTF());
+				if(world != null){
+					cinema.getRegion().setPos2(new Location(world,x,y,z));
+				}
+			}
 			int count = raf.readInt();
 			for(int i =0; i< count; i++){
-				players.add(new CinemaPlayer(cinema, raf));
+				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
 			}
 			break;
 		default:
@@ -35,8 +57,8 @@ public class RestorationFile {
 		}
 	}
 	
-	public RestorationFile(List<CinemaPlayer> players){
-		this.players = players;
+	public RestorationFile(Cinema cinema){
+		this.cinema = cinema;
 	}
 	
 	public void save(File file) throws IOException{
@@ -44,16 +66,29 @@ public class RestorationFile {
 		RandomAccessFile raf = new RandomAccessFile(file, "rw");
 		raf.writeUTF(fileID);
 		raf.writeInt(fileVersion);
-		raf.writeInt(players.size());
-		for(CinemaPlayer cp : players){
+		
+		Region reg = cinema.getRegion();
+		boolean oneSet = reg.getPos1() != null;
+		boolean twoSet = reg.getPos2() != null;
+		raf.writeBoolean(oneSet);
+		if(oneSet){
+			raf.writeInt(reg.getPos1().getBlockX());
+			raf.writeInt(reg.getPos1().getBlockY());
+			raf.writeInt(reg.getPos1().getBlockZ());
+			raf.writeUTF(reg.getPos1().getWorld().getName());
+		}
+		raf.writeBoolean(twoSet);
+		if(twoSet){
+			raf.writeInt(reg.getPos2().getBlockX());
+			raf.writeInt(reg.getPos2().getBlockY());
+			raf.writeInt(reg.getPos2().getBlockZ());
+			raf.writeUTF(reg.getPos2().getWorld().getName());
+		}
+		
+		raf.writeInt(cinema.getPlayerCount());
+		for(CinemaPlayer cp : cinema.getPlayers()){
 			cp.save(raf);		
 		}
 		raf.close();
-	}
-	
-	public void addTo(List<CinemaPlayer> players){
-		for(CinemaPlayer cp : this.players){
-			players.add(cp);
-		}
 	}
 }

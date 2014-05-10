@@ -1,2 +1,3 @@
 Plugin:
-   CheckForNewVersion:True
+   CheckForNewVersion: True
+   ShowApiKeyInInfo: False

@@ -16,6 +16,7 @@ public class Cinsert_Executor implements CommandExecutor{
 	
 	public Cinsert_Executor(Cinema cinema, boolean delta){
 		this.cinema = cinema;
+		this.delta = delta;
 	}
 	
 	private boolean delta;

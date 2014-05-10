@@ -2,8 +2,6 @@ package com.forgewareinc.Cinema;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 //import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;

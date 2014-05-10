@@ -45,6 +45,14 @@ public class CinemaSaver extends Thread {
 			insertedAs=cinemaFile.setFrame(frame, index);
 			sender.sendMessage("Saved frame at "+insertedAs+" ("+frame.getBlockCount()+" blocks)");
 		}
+		try
+		{
+			cinemaFile.save(null);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isInsert() {

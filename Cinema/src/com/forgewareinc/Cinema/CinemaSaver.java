@@ -41,6 +41,7 @@ public class CinemaSaver extends Thread {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void csaveDelta() {
 		String savefile= savePath+args[0];
 		try {
@@ -170,6 +171,7 @@ public class CinemaSaver extends Thread {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void csave(){
 		String savefile= savePath+args[0];
 		try {

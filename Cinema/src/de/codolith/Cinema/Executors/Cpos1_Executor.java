@@ -25,6 +25,9 @@ public class Cpos1_Executor implements CommandExecutor{
 			if(args.length == 0){
 				//take player pos
 				cinema.getRegion().setPos1(player.getLocation());
+				sender.sendMessage("Position 1 set to "+cinema.getRegion().getPos1AsString());
+				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
+				return true;
 			}else if(args.length == 3){
 				int x,y,z;
 				try{
@@ -46,7 +49,7 @@ public class Cpos1_Executor implements CommandExecutor{
 					return true;
 				}
 				cinema.getRegion().setPos1(new Location(player.getWorld(), x,y,z));
-				sender.sendMessage("Position 1 set to "+cinema.getRegion().getPos1());
+				sender.sendMessage("Position 1 set to "+cinema.getRegion().getPos1AsString());
 				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
 				return true;
 			}
@@ -78,7 +81,7 @@ public class Cpos1_Executor implements CommandExecutor{
 					return true;
 				}
 				cinema.getRegion().setPos1(new Location(world,x,y,z));
-				sender.sendMessage("Position 1 set to "+cinema.getRegion().getPos1());
+				sender.sendMessage("Position 1 set to "+cinema.getRegion().getPos1AsString());
 				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
 				return true;
 			}

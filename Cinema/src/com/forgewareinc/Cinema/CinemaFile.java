@@ -44,6 +44,7 @@ public class CinemaFile {
 				if(!forEditor){
 					um.AddmyBlock(new myBlock(um.w.getBlockAt(x, y, z)));
 				}
+				@SuppressWarnings("deprecation")
 				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				mba[b] = mb;
 			}
@@ -73,6 +74,7 @@ public class CinemaFile {
 				int x = raf.readInt()+xx;
 				int y = raf.readInt()+yy;
 				int z = raf.readInt()+zz;
+				@SuppressWarnings("deprecation")
 				myBlock mb = new myBlock(x,y,z,Material.getMaterial(raf.readInt()),raf.readByte());
 				mba[b] = mb;
 			}
@@ -129,6 +131,7 @@ public class CinemaFile {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void save() throws IOException{
 		File file = new File(filePath);
 		file.delete();
