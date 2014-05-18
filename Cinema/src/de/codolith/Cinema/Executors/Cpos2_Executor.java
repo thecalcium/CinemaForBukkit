@@ -24,7 +24,7 @@ public class Cpos2_Executor implements CommandExecutor{
 			Player player = (Player) sender;
 			if(args.length == 0){
 				//take player pos
-				cinema.getRegion().setPos2(player.getLocation());
+				cinema.getRegion().setPos2(player.getLocation().clone());
 				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
 				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
 				return true;

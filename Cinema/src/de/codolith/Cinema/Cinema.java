@@ -16,7 +16,7 @@ import de.codolith.Cinema.Executors.*;
 public class Cinema extends JavaPlugin
 {
 	public static Version		version			= null;									// from plugin.yml in constructor
-	public static Cinema		currentInstance	= null;
+	//public static Cinema		currentInstance	= null;
 	private File				dataFolder		= new File("plugins/cinema/files");
 	private File				restorationFile	= new File("plugins/cinema/hibernate.dat");
 	private List<CinemaPlayer>	players			= new LinkedList<CinemaPlayer>();
@@ -27,11 +27,7 @@ public class Cinema extends JavaPlugin
 
 	public Cinema()
 	{
-		if (version == null)
-		{
-			version = new Version(this.getDescription().getVersion());
-		}
-		currentInstance = this;
+		version = new Version(this.getDescription().getVersion());
 	}
 
 	public Version getNewestVersion()

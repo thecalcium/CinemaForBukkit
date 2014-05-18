@@ -31,6 +31,7 @@ public class Ceditopen_Executor implements CommandExecutor{
 				if(file.exists()){
 					CinemaEditor cinemaEditor = new CinemaEditor(cinema, new CinemaFile(file), sender);
 					cinema.setCinemaEditor(cinemaEditor);
+					sender.sendMessage("Animation \""+args[0]+"\" loaded");
 				}else{
 					sender.sendMessage("Animation \""+args[0]+"\" does not exist");
 				}

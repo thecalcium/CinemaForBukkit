@@ -61,7 +61,7 @@ public class Cplay_Executor implements CommandExecutor{
 					e.printStackTrace();
 					return true;
 				}
-				cinema.addPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount));
+				cinema.addPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount,cinema.getRegion().getPos1()));
 				return true;
 			}else{
 				sender.sendMessage("Player id already in use");

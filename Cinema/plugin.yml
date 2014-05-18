@@ -57,8 +57,8 @@ commands:
       permission: Cinema.basic
       permission-message: You don't have permission
    cresume:
-      description: Resumes the given cinemaplayer(ID you used at cplay)
-      usage: /cresume <ID>
+      description: Resumes the given cinemaplayers(IDs you used at cplay). for example "/cresume test mine stupid" will resume the 3 players test, mine and stupid
+      usage: /cresume <...>
       permission: Cinema.basic
       permission-message: You don't have permission
    cstep:
