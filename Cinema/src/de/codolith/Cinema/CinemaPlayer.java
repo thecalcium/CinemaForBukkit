@@ -18,7 +18,7 @@ public class CinemaPlayer extends BukkitRunnable{
 	private String id;
 	private CinemaFile cinemaFile;
 	private int frameDuration;
-	private int playCount, remainingPlayCount;
+	private int playCount, remainingFrames;
 	private Location offset;
 	private boolean reversed = false, running = true;
 	
@@ -61,7 +61,8 @@ public class CinemaPlayer extends BukkitRunnable{
 		this.cinemaFile = cinemaFile;
 		this.frameDuration = frameDuration;
 		this.playCount = playCount;
-		this.offset = offset;
+		this.remainingFrames= playCount*cinemaFile.getFrameCount();
+		this.offset = offset.clone();
 		shedule();
 	}
 	
@@ -74,7 +75,7 @@ public class CinemaPlayer extends BukkitRunnable{
 			cinemaFile = new CinemaFile(new File(cinema.getExtDataFolder(),restorationFile.readUTF()));
 			frameDuration = restorationFile.readInt();
 			playCount = restorationFile.readInt();
-			remainingPlayCount = restorationFile.readInt();
+			remainingFrames = restorationFile.readInt();
 			int x = restorationFile.readInt();
 			int y = restorationFile.readInt();
 			int z = restorationFile.readInt();
@@ -97,7 +98,7 @@ public class CinemaPlayer extends BukkitRunnable{
 		restorationFile.writeUTF(cinemaFile.getName());
 		restorationFile.writeInt(frameDuration);
 		restorationFile.writeInt(playCount);
-		restorationFile.writeInt(remainingPlayCount);
+		restorationFile.writeInt(remainingFrames);
 		restorationFile.writeInt(offset.getBlockX());
 		restorationFile.writeInt(offset.getBlockY());
 		restorationFile.writeInt(offset.getBlockZ());
@@ -117,11 +118,15 @@ public class CinemaPlayer extends BukkitRunnable{
 		running = false;
 	}
 	
+	public boolean isPaused(){
+		return running == false;
+	}
+	
 	public void reverse(){
 		reversed = !reversed;
 	}
 	
-	private void alterCurrentFrame(int value){
+	public void alterCurrentFrame(int value){
 		currentFrame += value;
 		while(currentFrame >= cinemaFile.getFrameCount()){
 			currentFrame -= cinemaFile.getFrameCount();
@@ -138,12 +143,16 @@ public class CinemaPlayer extends BukkitRunnable{
 	@Override
 	public void run()
 	{
-		if(running){
+		if(running && remainingFrames>0){
 			if(msCounter >= frameDuration){
 				int count = msCounter / frameDuration;
 				alterCurrentFrame(reversed? -count : count);
 				drawCurrentFrame();
 				msCounter -= count * frameDuration;
+				remainingFrames -= count;
+				if(remainingFrames <=0){
+					this.cancel();
+				}
 			}
 			msCounter+=msPerTick;
 		}

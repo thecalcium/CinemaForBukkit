@@ -1,6 +1,6 @@
 name: Cinema
 main: de.codolith.Cinema.Cinema
-version: 2.0
+version: 2.0.1
 permissions:
    Cinema.basic:
       description: gives access to the cinema plugin
@@ -59,6 +59,11 @@ commands:
    cresume:
       description: Resumes the given cinemaplayer(ID you used at cplay)
       usage: /cresume <ID>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cstep:
+      description: steps the given cinemaplayer(ID you used at cplay). -1 goes one frame back, 1 goes one frame forward. this works only when paused!!!
+      usage: /cstep <ID> <count>
       permission: Cinema.basic
       permission-message: You don't have permission
    cinemainfo:

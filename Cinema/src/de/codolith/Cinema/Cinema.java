@@ -40,8 +40,8 @@ public class Cinema extends JavaPlugin
 		// version name is like "Cinema v*.*.*.*"
 		if (versionChecker.getVersionName() != null)
 		{
-			String[] sa = versionChecker.getVersionName().split(" ", 2);
-			if (sa.length == 2)
+			String[] sa = versionChecker.getVersionName().split(" ", 3);
+			if (sa.length >= 2)
 			{
 				sa[1] = sa[1].substring(1); // getting rid of the v
 				try
@@ -136,6 +136,7 @@ public class Cinema extends JavaPlugin
 		getCommand("cstop").setExecutor(new Cstop_Executor(this));
 		getCommand("cpause").setExecutor(new Cpause_Executor(this));
 		getCommand("cresume").setExecutor(new Cresume_Executor(this));
+		getCommand("cstep").setExecutor(new Cstep_Executor(this));
 	}
 
 	@Override
