@@ -18,14 +18,14 @@ public class Ceditshow_Executor implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 1){
 			if(cinema.getCinemaEditor() != null){
-				if(cinema.getRegion().getPos1()!=null){
+				if(cinema.getRegion(sender).getPos1()!=null){
 					int index = 0;
 					try{
 						index = Integer.parseInt(args[0]);
 					}catch(NumberFormatException nfe){
 						sender.sendMessage("Invalid value for parameter \"index\"");
 					}
-					cinema.getCinemaEditor().showFrame(index);
+					cinema.getCinemaEditor().showFrame(index,sender);
 				}else{
 					sender.sendMessage("Position 1 not set. Use /cpos1 to set it");
 				}

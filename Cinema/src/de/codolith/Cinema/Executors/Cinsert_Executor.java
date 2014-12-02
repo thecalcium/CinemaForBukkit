@@ -32,7 +32,7 @@ public class Cinsert_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 2){
-			Location pos1 = cinema.getRegion().getPos1(), pos2 = cinema.getRegion().getPos2();
+			Location pos1 = cinema.getRegion(sender).getPos1(), pos2 = cinema.getRegion(sender).getPos2();
 			if(pos1 == null || pos2 == null)
 			{
 				sender.sendMessage("Positions were not set. can't continue");

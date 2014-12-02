@@ -34,9 +34,9 @@ public class CinemaSaver extends Thread {
 		Frame frame = null;
 		if(isDelta()){
 			Frame previousFrame = cinemaFile.getPreviousFrameFull(index);
-			frame = new Frame(cinema.getRegion(),previousFrame);
+			frame = new Frame(cinema.getRegion(sender),previousFrame);
 		}else{
-			frame = new Frame(cinema.getRegion());
+			frame = new Frame(cinema.getRegion(sender));
 		}
 		if(isInsert()){
 			insertedAs=cinemaFile.insertFrame(frame, index);

@@ -10,7 +10,7 @@ import org.bukkit.World;
 
 public class RestorationFile {
 	
-	public static final int fileVersion = 0;
+	public static final int fileVersion = 1;
 	public static final String fileID = "cinemaRestore";
 	
 	private Cinema cinema;
@@ -26,14 +26,16 @@ public class RestorationFile {
 		int version = raf.readInt();
 		switch(version){
 		case 0:
-			boolean oneSet = raf.readBoolean();
+			raf.readBoolean();
+			raf.readBoolean();
+			/*boolean oneSet = raf.readBoolean();
 			if(oneSet){
 				int x = raf.readInt();
 				int y = raf.readInt();
 				int z = raf.readInt();
 				World world = Bukkit.getWorld(raf.readUTF());
 				if(world != null){
-					cinema.getRegion().setPos1(new Location(world,x,y,z));
+					cinema.getRegion(sender).setPos1(new Location(world,x,y,z));
 				}
 			}
 			boolean twoSet = raf.readBoolean();
@@ -45,12 +47,19 @@ public class RestorationFile {
 				if(world != null){
 					cinema.getRegion().setPos2(new Location(world,x,y,z));
 				}
-			}
+			}*/
 			int count = raf.readInt();
 			for(int i =0; i< count; i++){
 				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
 			}
+			raf.close();
 			break;
+		case 1:
+			count = raf.readInt();
+			for(int i =0; i< count; i++){
+				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
+			}
+			raf.close();
 		default:
 			raf.close();
 			throw new IllegalArgumentException("unknown restoration file version: "+version);
@@ -67,7 +76,7 @@ public class RestorationFile {
 		raf.writeUTF(fileID);
 		raf.writeInt(fileVersion);
 		
-		Region reg = cinema.getRegion();
+		/*Region reg = cinema.getRegion();
 		boolean oneSet = reg.getPos1() != null;
 		boolean twoSet = reg.getPos2() != null;
 		raf.writeBoolean(oneSet);
@@ -83,7 +92,7 @@ public class RestorationFile {
 			raf.writeInt(reg.getPos2().getBlockY());
 			raf.writeInt(reg.getPos2().getBlockZ());
 			raf.writeUTF(reg.getPos2().getWorld().getName());
-		}
+		}*/
 		
 		raf.writeInt(cinema.getPlayerCount());
 		for(CinemaPlayer cp : cinema.getPlayers()){

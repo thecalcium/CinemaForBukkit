@@ -38,9 +38,9 @@ public class CinemaEditor {
 		sender.sendMessage("Animation \""+cinemaFile.getName()+"\" with "+cinemaFile.getFrameCount()+" frames opened by "+owner.getName());
 	}
 
-	public void showFrame(int index) {
+	public void showFrame(int index,CommandSender sender) {
 		Frame frame = cinemaFile.getFrame(index);
-		frame.draw(cinema.getRegion().getPos1());
+		frame.draw(cinema.getRegion(sender).getPos1());
 	}
 
 	public void reverse() {

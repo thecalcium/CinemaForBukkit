@@ -24,9 +24,9 @@ public class Cpos2_Executor implements CommandExecutor{
 			Player player = (Player) sender;
 			if(args.length == 0){
 				//take player pos
-				cinema.getRegion().setPos2(player.getLocation().clone());
-				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
-				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
+				cinema.getRegion(sender).setPos2(player.getLocation().clone());
+				sender.sendMessage("Position 2 set to "+cinema.getRegion(sender).getPos2AsString());
+				sender.sendMessage(cinema.getRegion(sender).getBlockCount()+" blocks selected");
 				return true;
 			}else if(args.length == 3){
 				int x,y,z;
@@ -48,9 +48,9 @@ public class Cpos2_Executor implements CommandExecutor{
 					sender.sendMessage("invalid value for parameter \"x\"");
 					return true;
 				}
-				cinema.getRegion().setPos2(new Location(player.getWorld(), x,y,z));
-				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
-				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
+				cinema.getRegion(sender).setPos2(new Location(player.getWorld(), x,y,z));
+				sender.sendMessage("Position 2 set to "+cinema.getRegion(sender).getPos2AsString());
+				sender.sendMessage(cinema.getRegion(sender).getBlockCount()+" blocks selected");
 				return true;
 			}
 		}else{ //is console
@@ -80,9 +80,9 @@ public class Cpos2_Executor implements CommandExecutor{
 					sender.sendMessage("invalid value for parameter \"world\" (world does not exist)");
 					return true;
 				}
-				cinema.getRegion().setPos2(new Location(world,x,y,z));
-				sender.sendMessage("Position 2 set to "+cinema.getRegion().getPos2AsString());
-				sender.sendMessage(cinema.getRegion().getBlockCount()+" blocks selected");
+				cinema.getRegion(sender).setPos2(new Location(world,x,y,z));
+				sender.sendMessage("Position 2 set to "+cinema.getRegion(sender).getPos2AsString());
+				sender.sendMessage(cinema.getRegion(sender).getBlockCount()+" blocks selected");
 				return true;
 			}
 		}

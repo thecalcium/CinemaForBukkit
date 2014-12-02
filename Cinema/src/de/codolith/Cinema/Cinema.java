@@ -3,6 +3,7 @@ package de.codolith.Cinema;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,7 +22,8 @@ public class Cinema extends JavaPlugin
 	private File				restorationFile	= new File("plugins/cinema/hibernate.dat");
 	private List<CinemaPlayer>	players			= new LinkedList<CinemaPlayer>();
 	private Logger				logger			= null;
-	private Region				region			= new Region();
+	private HashMap<String,Region> regions = new HashMap<String,Region>();
+	//private Region				region			= new Region();
 	private CinemaEditor		cinemaEditor	= null;
 	private VersionChecker		versionChecker	= new VersionChecker();
 
@@ -179,9 +181,17 @@ public class Cinema extends JavaPlugin
 		}
 	}
 
-	public Region getRegion()
+	public Region getRegion(CommandSender sender)
 	{
-		return region;
+		Region retval = null;
+		String sendername = sender.getName();
+		if(regions.containsKey(sender.getName())){
+			retval = regions.get(sendername);
+		}else{
+			retval = new Region();
+			regions.put(sendername, retval);
+		}
+		return retval;
 	}
 
 	@Override

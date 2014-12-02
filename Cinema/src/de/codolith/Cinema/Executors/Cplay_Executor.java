@@ -22,7 +22,7 @@ public class Cplay_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length>=2 && args.length <=4){
-			if(cinema.getRegion().getPos1() == null)
+			if(cinema.getRegion(sender).getPos1() == null)
 			{
 				sender.sendMessage("Position one not set. Can't continue");
 				return true;
@@ -61,7 +61,7 @@ public class Cplay_Executor implements CommandExecutor{
 					e.printStackTrace();
 					return true;
 				}
-				cinema.addPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount,cinema.getRegion().getPos1()));
+				cinema.addPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount,cinema.getRegion(sender).getPos1()));
 				return true;
 			}else{
 				sender.sendMessage("Player id already in use");
