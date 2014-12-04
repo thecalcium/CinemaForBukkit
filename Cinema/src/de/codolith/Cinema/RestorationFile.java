@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-
 public class RestorationFile {
 	
 	public static final int fileVersion = 1;
@@ -60,6 +56,7 @@ public class RestorationFile {
 				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
 			}
 			raf.close();
+			break;
 		default:
 			raf.close();
 			throw new IllegalArgumentException("unknown restoration file version: "+version);

@@ -197,7 +197,7 @@ public class Cinema extends JavaPlugin
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		sender.sendMessage("this command is broken O_o. please report that you got this message");
+		sender.sendMessage("You shouldnt see this message O_o. this would mean a command wasnt registered properly");
 		return true;
 	}
 
