@@ -15,7 +15,7 @@ public class Localizator
 			localizationSources.add(source);
 			for (String label : source.getAvailableLabels())
 			{
-				labelSources.put(label,source);// = source;
+				labelSources.put(label,source);
 			}
 			source.languageCodeChanged(languageCode);
 		}

@@ -3,7 +3,7 @@ package de.codolith.Cinema;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +30,7 @@ public class Cinema extends JavaPlugin
 	private CinemaEditor		cinemaEditor	= null;
 	private VersionChecker		versionChecker	= new VersionChecker();
 	private Localizator         localizator		= new Localizator();
+	private Formatter			formatter		= new Formatter();
 
 	public Cinema()
 	{
@@ -120,8 +119,10 @@ public class Cinema extends JavaPlugin
 		if(!messagesFile.exists()){
 			createMessagesFile();
 		}
-		localizator.addLocalizationSource(new YMLConfigLocalizationSource(messagesFile));
+		YMLConfigLocalizationSource locsource = new YMLConfigLocalizationSource(messagesFile);
+		localizator.addLocalizationSource(locsource);
 		localizator.setLanguageCode("messages");
+		
 
 		getCommand("cpos1").setExecutor(new Cpos1_Executor(this));
 		getCommand("cpos2").setExecutor(new Cpos2_Executor(this));
@@ -158,9 +159,62 @@ public class Cinema extends JavaPlugin
 		YMLConfigLocalizationSource source = new YMLConfigLocalizationSource();
 		
 		String l = "messages";
-		source.AddLabel("", l, "No Animations active");
+		source.setDefaultLanguageCode(l);
+		source.AddLabel(Messages.s, l, "%s");
+		source.AddLabel(Messages.no_anims_active, l, "No animations active");
+		source.AddLabel(Messages.X_anim_active, l, "%1$s animation active:");
+		source.AddLabel(Messages.X_anims_active, l, "%1$s animations active:");
+		source.AddLabel(Messages.pos_X_set_to_Y, l, "Position %1$s set to %2$s");
+		source.AddLabel(Messages.X_blocks_selected, l, "%1$s blocks selected");
+		source.AddLabel(Messages.invalid_value_for_param_X, l, "Invalid value for parameter \"%1$s\"");
+		source.AddLabel(Messages.invalid_value_for_param_X_no_quot, l, "Invalid value for parameter %1$s");
+		source.AddLabel(Messages.available_alignments, l, "Available Alignments (you can use the number too):");
+		source.AddLabel(Messages.X_colon_Y, l, "%1$s: %2$s");
+		source.AddLabel(Messages.apikey_colon_X, l, "ApiKey: %1$s");
+		source.AddLabel(Messages.cinema_version_colon_X, l, "Cinema Version: %1$s");
+		source.AddLabel(Messages.new_version_you_have_X_newest_is_Y, l, "NEW VERSION AVAILABLE FOR CINEMA PLUGIN! You have \"%1$s\" and the newest version is \"%2$s\"");
+		source.AddLabel(Messages.get_cinema_here_colon_X, l, "Get Cinema here: %1$s");
+		source.AddLabel(Messages.deleted_animation_X, l, "Deleted animation \"%1$s\"");
+		source.AddLabel(Messages.no_animation_with_name_X, l, "No animation with name \"%1$s\"");
+		source.AddLabel(Messages.positions_not_set, l, "Positions not set. Can't continue");
+		source.AddLabel(Messages.positions_have_to_be_same_world, l, "Positions have to be in the same world");
+		source.AddLabel(Messages.player_X_paused, l, "Player \"%1$s\" paused");
+		source.AddLabel(Messages.player_X_doesnt_exist, l, "Player \"%1$s\" doesn't exist");
+		source.AddLabel(Messages.animation_X_doesnt_exist, l, "Animation \"%1$s\" doesn't exist");
+		source.AddLabel(Messages.error_opening_animation_X, l, "Error opening animation \"%1$s\"");
+		source.AddLabel(Messages.player_id_already_in_use, l, "Player id already in use");
+		source.AddLabel(Messages.player_X_resumed, l, "Player \"%1$s\" resumed");
+		source.AddLabel(Messages.player_X_reversed, l, "Player \"%1$s\" reversed");
+		source.AddLabel(Messages.apikey_set_to_X, l, "ApiKey set to \"%1$s\"");
+		source.AddLabel(Messages.apikey_removed, l, "ApiKey removed");
+		source.AddLabel(Messages.stepped_X_frames, l, "Stepped %1$s frames");
+		source.AddLabel(Messages.player_has_to_be_paused, l, "The cinema player has to be paused for this");
+		source.AddLabel(Messages.player_X_stopped, l, "Player \"%1$s\" stopped");
+		source.AddLabel(Messages.file_not_found_colon_X, l, "file not found \"%1$s\"");
+		source.AddLabel(Messages.conversion_successful, l, "Conversion successful");
+		source.AddLabel(Messages.conversion_failed, l, "Conversion failed, can't save file");
+		source.AddLabel(Messages.pos_X_not_set, l, "Position %1$s not set");
+		source.AddLabel(Messages.no_file_in_editor, l, "No file opened in editor");
+		source.AddLabel(Messages.error_saving_animation, l, "Error saving animation");
+		source.AddLabel(Messages.animation_X_loaded, l, "Animation \"%1$s\" loaded");
+		source.AddLabel(Messages.error_see_console, l,"An error occoured. See server console for more infos");
+		source.AddLabel(Messages.animation_still_loaded, l,"There is still an animation loaded in the editor. You have to close it first with /ceditclose");
 		
-		source.save(messagesFile);
+		try{
+			source.save(messagesFile);
+		}catch(IOException ex){
+			logger.warning("Error creating messages.yml file!");
+			ex.printStackTrace();
+		}
+	}
+	
+	public String getMessage(String label)
+	{
+		return localizator.get("@"+label);
+	}
+	
+	public Formatter getFormatter(){
+		return formatter;
 	}
 
 	@Override

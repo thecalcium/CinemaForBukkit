@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaPlayer;
+import de.codolith.Cinema.Messages;
 
 public class Cpause_Executor implements CommandExecutor{
 
@@ -21,10 +22,12 @@ public class Cpause_Executor implements CommandExecutor{
 			if(cinema.containsCinemaPlayer(args[0])){
 				CinemaPlayer cp = cinema.getCinemaPlayer(args[0]);
 				cp.pause();
-				sender.sendMessage("Player \""+args[0]+"\" paused");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.player_X_paused),args[0]));
+				//sender.sendMessage("Player \""+args[0]+"\" paused");
 				return true;
 			}else{
-				sender.sendMessage("Player \""+args[0]+"\" doesn't exist");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.player_X_doesnt_exist),args[0]));
+				//sender.sendMessage("Player \""+args[0]+"\" doesn't exist");
 				return true;
 			}
 		}

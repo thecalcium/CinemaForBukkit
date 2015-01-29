@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Ceditshow_Executor implements CommandExecutor{
 
@@ -23,14 +24,15 @@ public class Ceditshow_Executor implements CommandExecutor{
 					try{
 						index = Integer.parseInt(args[0]);
 					}catch(NumberFormatException nfe){
-						sender.sendMessage("Invalid value for parameter \"index\"");
+						sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"index"));
 					}
 					cinema.getCinemaEditor().showFrame(index,sender);
 				}else{
-					sender.sendMessage("Position 1 not set. Use /cpos1 to set it");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.pos_X_not_set),"1"));
+					//sender.sendMessage("Position 1 not set. Use /cpos1 to set it");
 				}
 			}else{
-				sender.sendMessage("No file in Editor");
+				sender.sendMessage(cinema.getMessage(Messages.no_file_in_editor));
 			}
 			return true;
 		}

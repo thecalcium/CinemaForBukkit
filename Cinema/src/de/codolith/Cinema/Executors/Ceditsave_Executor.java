@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Ceditsave_Executor implements CommandExecutor
 {
@@ -40,13 +41,14 @@ public class Ceditsave_Executor implements CommandExecutor
 				}
 				catch (IOException ioe)
 				{
-					sender.sendMessage("error saving animation");
+					sender.sendMessage(cinema.getMessage(Messages.error_saving_animation));
+					//sender.sendMessage("error saving animation");
 					ioe.printStackTrace();
 				}
 			}
 			else
 			{
-				sender.sendMessage("No file opened in editor");
+				sender.sendMessage(cinema.getMessage(Messages.no_file_in_editor));
 			}
 			return true;
 		}

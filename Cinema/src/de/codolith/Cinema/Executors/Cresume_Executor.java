@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaPlayer;
+import de.codolith.Cinema.Messages;
 
 public class Cresume_Executor implements CommandExecutor
 {
@@ -28,11 +29,13 @@ public class Cresume_Executor implements CommandExecutor
 				{
 					CinemaPlayer cp = cinema.getCinemaPlayer(args[i]);
 					cp.play();
-					sender.sendMessage("Player \"" + args[i] + "\" resumed");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.player_X_resumed),args[i]));
+					//sender.sendMessage("Player \"" + args[i] + "\" resumed");
 				}
 				else
 				{
-					sender.sendMessage("Player \"" + args[i] + "\" doesn't exist");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.player_X_doesnt_exist),args[i]));
+					//sender.sendMessage("Player \"" + args[i] + "\" doesn't exist");
 				}
 			}
 			return true;

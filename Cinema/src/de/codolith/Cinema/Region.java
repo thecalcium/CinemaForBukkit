@@ -61,11 +61,11 @@ public class Region {
 	}
 	public String getPos1AsString()
 	{
-		return "["+pos1.getBlockX()+", "+pos1.getBlockY()+", "+pos1.getBlockZ()+"] in world "+((pos1.getWorld()==null)?"<null>":pos1.getWorld().getName());
+		return "["+pos1.getBlockX()+", "+pos1.getBlockY()+", "+pos1.getBlockZ()+"] in world \""+((pos1.getWorld()==null)?"<null>":pos1.getWorld().getName())+"\"";
 	}
 	public String getPos2AsString()
 	{
-		return "["+pos2.getBlockX()+", "+pos2.getBlockY()+", "+pos2.getBlockZ()+"] in world "+((pos2.getWorld()==null)?"<null>":pos2.getWorld().getName());
+		return "["+pos2.getBlockX()+", "+pos2.getBlockY()+", "+pos2.getBlockZ()+"] in world \""+((pos2.getWorld()==null)?"<null>":pos2.getWorld().getName())+"\"";
 	}
 	
 	@Override

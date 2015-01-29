@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaSaver;
+import de.codolith.Cinema.Messages;
 
 public class Cinsert_Executor implements CommandExecutor{
 
@@ -35,11 +36,13 @@ public class Cinsert_Executor implements CommandExecutor{
 			Location pos1 = cinema.getRegion(sender).getPos1(), pos2 = cinema.getRegion(sender).getPos2();
 			if(pos1 == null || pos2 == null)
 			{
-				sender.sendMessage("Positions were not set. can't continue");
+				sender.sendMessage(cinema.getMessage(Messages.positions_not_set));
+				//sender.sendMessage("Positions were not set. can't continue");
 				return true;
 			}
-			if(pos1.getWorld() != pos2.getWorld()){
-				sender.sendMessage("Both positions have to be in the same world");
+			if(pos1.getWorld() == null || pos1.getWorld() != pos2.getWorld()){
+				sender.sendMessage(cinema.getMessage(Messages.positions_have_to_be_same_world));
+				//sender.sendMessage("Both positions have to be in the same world");
 				return true;
 			}
 			int index = Integer.MAX_VALUE;
@@ -47,7 +50,7 @@ public class Cinsert_Executor implements CommandExecutor{
 			try{
 				index = Integer.parseInt(args[1]);
 			}catch(NumberFormatException nfe){
-				sender.sendMessage("Invalid value for parameter \"index\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"index"));
 				return true;
 			}
 			

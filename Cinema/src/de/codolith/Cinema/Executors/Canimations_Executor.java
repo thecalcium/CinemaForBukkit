@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaPlayer;
+import de.codolith.Cinema.Messages;
 
 public class Canimations_Executor implements CommandExecutor{
 
@@ -18,11 +19,11 @@ public class Canimations_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(cinema.getCinemaPlayerCount() == 0){
-			sender.sendMessage("No Animations active");
+			sender.sendMessage(cinema.getMessage(Messages.no_anims_active));
 		}else if(cinema.getCinemaPlayerCount() == 1){
-			sender.sendMessage(cinema.getCinemaPlayerCount()+" Animation active:");
+			sender.sendMessage(String.format(cinema.getMessage(Messages.X_anim_active),Integer.toString(cinema.getCinemaPlayerCount())));
 		}else{
-			sender.sendMessage(cinema.getCinemaPlayerCount()+" Animations active:");
+			sender.sendMessage(String.format(cinema.getMessage(Messages.X_anims_active),Integer.toString(cinema.getCinemaPlayerCount())));
 		}
 		for(CinemaPlayer cp : cinema.getCinemaPlayers()){
 			sender.sendMessage(cp.getId());

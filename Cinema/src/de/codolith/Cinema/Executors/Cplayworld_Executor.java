@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaFile;
 import de.codolith.Cinema.CinemaPlayer;
+import de.codolith.Cinema.Messages;
 
 public class Cplayworld_Executor implements CommandExecutor{
 
@@ -34,24 +35,24 @@ public class Cplayworld_Executor implements CommandExecutor{
 			try{
 				x = Integer.parseInt(args[2]);
 			}catch(NumberFormatException nfe){
-				sender.sendMessage("Invalid value for parameter \"x\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"x"));
 				return true;
 			}
 			try{
 				y = Integer.parseInt(args[3]);
 			}catch(NumberFormatException nfe){
-				sender.sendMessage("Invalid value for parameter \"y\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"y"));
 				return true;
 			}
 			try{
 				z = Integer.parseInt(args[4]);
 			}catch(NumberFormatException nfe){
-				sender.sendMessage("Invalid value for parameter \"z\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"z"));
 				return true;
 			}
 			world = Bukkit.getWorld(args[5]);
 			if(world == null){
-				sender.sendMessage("Invalud value for parameter \"world\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"world"));
 			}
 			
 			int playCount = 0;
@@ -60,14 +61,14 @@ public class Cplayworld_Executor implements CommandExecutor{
 				try{
 					frameDuration = Integer.parseInt(args[2]);
 				}catch(NumberFormatException nfe){
-					sender.sendMessage("Invalid value for parameter \"framedurationInMillis\"");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"framedurationInMillis"));
 					return true;
 				}
 				if(args.length>7){
 					try{
 						playCount = Integer.parseInt(args[3]);
 					}catch(NumberFormatException nfe){
-						sender.sendMessage("Invalid value for parameter \"playcount\"");
+						sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"playcount"));
 						return true;
 					}
 				}
@@ -76,7 +77,8 @@ public class Cplayworld_Executor implements CommandExecutor{
 			Location location = new Location(world,x,y,z);
 			File file = new File(cinema.getExtDataFolder(),anim);
 			if(!file.exists()){
-				sender.sendMessage("Animation \""+args[1]+"\" does not exist");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.animation_X_doesnt_exist),args[1]));
+				//sender.sendMessage("Animation \""+args[1]+"\" does not exist");
 				return true;
 			}
 			if(!cinema.containsCinemaPlayer(id)){
@@ -84,14 +86,15 @@ public class Cplayworld_Executor implements CommandExecutor{
 				try{
 					cinemaFile = new CinemaFile(file);
 				}catch(IOException e){
-					sender.sendMessage("Error opening animation \""+args[1]+"\"");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.error_opening_animation_X),args[1]));
+					//sender.sendMessage("Error opening animation \""+args[1]+"\"");
 					e.printStackTrace();
 					return true;
 				}
 				cinema.addCinemaPlayer(new CinemaPlayer(cinema, id, cinemaFile, frameDuration, playCount,location));
 				return true;
 			}else{
-				sender.sendMessage("Player id already in use");
+				sender.sendMessage(cinema.getMessage(Messages.player_id_already_in_use));
 				return true;
 			}
 		}

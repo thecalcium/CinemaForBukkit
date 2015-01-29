@@ -33,7 +33,7 @@ public class CinemaPlayer extends BukkitRunnable
 		this.frameDuration = frameDuration;
 		this.playCount = playCount;
 		this.remainingFrames = playCount * cinemaFile.getFrameCount();
-		this.offset = new Location(offset.getWorld(),offset.getY(),offset.getY(),offset.getZ(),offset.getYaw(),offset.getPitch());
+		this.offset = new Location(offset.getWorld(),offset.getX(),offset.getY(),offset.getZ(),offset.getYaw(),offset.getPitch());
 		//this.offset = offset.clone();
 		running = true;
 		reversed = false;

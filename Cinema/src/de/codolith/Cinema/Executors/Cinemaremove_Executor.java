@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Cinemaremove_Executor implements CommandExecutor{
 
@@ -22,9 +23,11 @@ public class Cinemaremove_Executor implements CommandExecutor{
 			File f = new File(cinema.getExtDataFolder(),args[0]);
 			if(f.exists()){
 				f.delete();
-				sender.sendMessage("Deleted animation \""+args[0]+"\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.deleted_animation_X),args[0]));
+				//sender.sendMessage("Deleted animation \""+args[0]+"\"");
 			}else{
-				sender.sendMessage("No animation with name \""+args[0]+"\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.no_animation_with_name_X),args[0]));
+				//sender.sendMessage("No animation with name \""+args[0]+"\"");
 			}
 			return true;
 		}

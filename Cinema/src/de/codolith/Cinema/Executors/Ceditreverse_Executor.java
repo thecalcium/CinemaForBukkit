@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Ceditreverse_Executor implements CommandExecutor {
 private Cinema cinema;
@@ -18,7 +19,7 @@ private Cinema cinema;
 		if(cinema.getCinemaEditor() !=null){
 			cinema.getCinemaEditor().reverse();
 		}else{
-			sender.sendMessage("No file opened in editor");
+			sender.sendMessage(cinema.getMessage(Messages.no_file_in_editor));
 		}
 		return true;
 	}

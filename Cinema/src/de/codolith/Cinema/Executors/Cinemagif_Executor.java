@@ -18,6 +18,7 @@ import de.codolith.Cinema.Alignment;
 import de.codolith.Cinema.Cinema;
 import de.codolith.Cinema.CinemaFile;
 import de.codolith.Cinema.Frame;
+import de.codolith.Cinema.Messages;
 
 public class Cinemagif_Executor implements CommandExecutor{
 
@@ -38,15 +39,16 @@ public class Cinemagif_Executor implements CommandExecutor{
 				try{
 					alignment = Alignment.valueOf(args[2]);
 				}catch(IllegalArgumentException e){
-					sender.sendMessage("Invalid value for parameter \"alignment\"");
+					sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"alignment"));
 				}
 			} catch(ArrayIndexOutOfBoundsException ex){
-				sender.sendMessage("Invalid value for parameter \"alignment\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"alignment"));
 			}
 			
 			File inputFile = new File(cinema.getExtDataFolder(),args[0]);
 			if(!inputFile.exists()){
-				sender.sendMessage("Input file not found \""+args[0]+"\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.file_not_found_colon_X),args[0]));
+				//sender.sendMessage("Input file not found \""+args[0]+"\"");
 				return true;
 			}
 			File outputFile = new File(cinema.getExtDataFolder(),args[1]);
@@ -74,9 +76,9 @@ public class Cinemagif_Executor implements CommandExecutor{
 			CinemaFile cf = new CinemaFile(frames);
 			try {
 				cf.save(outputFile);
-				sender.sendMessage("Conversion successful");
+				sender.sendMessage(cinema.getMessage(Messages.conversion_successful));
 			} catch (IOException e) {
-				sender.sendMessage("Conversion failed, can't save file");
+				sender.sendMessage(cinema.getMessage(Messages.conversion_failed));
 				e.printStackTrace();
 			}
 			

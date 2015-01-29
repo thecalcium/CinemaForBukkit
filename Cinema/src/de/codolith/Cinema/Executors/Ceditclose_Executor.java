@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Ceditclose_Executor implements CommandExecutor{
 
@@ -20,7 +21,7 @@ public class Ceditclose_Executor implements CommandExecutor{
 			cinema.getCinemaEditor().close();
 			cinema.setCinemaEditor(null);
 		}else{
-			sender.sendMessage("No file opened in editor");
+			sender.sendMessage(cinema.getMessage(Messages.no_file_in_editor));
 		}
 		return true;
 	}

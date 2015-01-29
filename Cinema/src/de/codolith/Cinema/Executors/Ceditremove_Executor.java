@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Messages;
 
 public class Ceditremove_Executor implements CommandExecutor{
 
@@ -21,13 +22,13 @@ public class Ceditremove_Executor implements CommandExecutor{
 			try{
 				index = Integer.parseInt(args[0]);
 			}catch(NumberFormatException nfe){
-				sender.sendMessage("Invalid value for parameter \"index\"");
+				sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"index"));
 				return true;
 			}
 			if(cinema.getCinemaEditor() !=null){
 				cinema.getCinemaEditor().deleteFrame(index);
 			}else{
-				sender.sendMessage("No file opened in editor");
+				sender.sendMessage(cinema.getMessage(Messages.no_file_in_editor));
 			}
 			return true;
 		}
