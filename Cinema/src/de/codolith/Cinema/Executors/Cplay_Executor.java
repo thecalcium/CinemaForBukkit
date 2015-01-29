@@ -52,7 +52,7 @@ public class Cplay_Executor implements CommandExecutor{
 				sender.sendMessage("Animation \""+args[1]+"\" does not exist");
 				return true;
 			}
-			if(!cinema.containsPlayer(args[0])){
+			if(!cinema.containsCinemaPlayer(args[0])){
 				CinemaFile cinemaFile = null;
 				try{
 					cinemaFile = new CinemaFile(file);
@@ -61,7 +61,7 @@ public class Cplay_Executor implements CommandExecutor{
 					e.printStackTrace();
 					return true;
 				}
-				cinema.addPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount,cinema.getRegion(sender).getPos1()));
+				cinema.addCinemaPlayer(new CinemaPlayer(cinema, args[0], cinemaFile, frameDuration, playCount,cinema.getRegion(sender).getPos1()));
 				return true;
 			}else{
 				sender.sendMessage("Player id already in use");

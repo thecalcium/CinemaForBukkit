@@ -1,10 +1,18 @@
 package de.codolith.Cinema;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public class Region {
-	private Location pos1 = null, pos2 = null;
+	private Location pos1, pos2;
 	private int minX=0,minY=0,minZ=0,maxX=0,maxY=0,maxZ=0,blockCount=0;
+	
+	public Region(World world){
+		pos1 = new Location(world,0,0,0);
+		pos2 = new Location(world,0,0,0);
+		recalc();
+	}
+	
 	private void recalc(){
 		if(pos1 != null && pos2 != null){
 			minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
@@ -53,10 +61,15 @@ public class Region {
 	}
 	public String getPos1AsString()
 	{
-		return "["+pos1.getBlockX()+", "+pos1.getBlockY()+", "+pos1.getBlockZ()+"] in world "+pos1.getWorld().getName();
+		return "["+pos1.getBlockX()+", "+pos1.getBlockY()+", "+pos1.getBlockZ()+"] in world "+((pos1.getWorld()==null)?"<null>":pos1.getWorld().getName());
 	}
 	public String getPos2AsString()
 	{
-		return "["+pos2.getBlockX()+", "+pos2.getBlockY()+", "+pos2.getBlockZ()+"] in world "+pos2.getWorld().getName();
+		return "["+pos2.getBlockX()+", "+pos2.getBlockY()+", "+pos2.getBlockZ()+"] in world "+((pos2.getWorld()==null)?"<null>":pos2.getWorld().getName());
+	}
+	
+	@Override
+	public String toString(){
+		return "Pos1: "+getPos1AsString()+"\nPos2: "+getPos2AsString()+"\nBlocks selected: "+getBlockCount();
 	}
 }

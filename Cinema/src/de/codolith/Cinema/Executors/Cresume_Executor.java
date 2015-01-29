@@ -24,9 +24,9 @@ public class Cresume_Executor implements CommandExecutor
 		{
 			for (int i = 0; i < args.length; i++)
 			{
-				if (cinema.containsPlayer(args[i]))
+				if (cinema.containsCinemaPlayer(args[i]))
 				{
-					CinemaPlayer cp = cinema.getPlayer(args[i]);
+					CinemaPlayer cp = cinema.getCinemaPlayer(args[i]);
 					cp.play();
 					sender.sendMessage("Player \"" + args[i] + "\" resumed");
 				}

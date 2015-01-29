@@ -18,10 +18,10 @@ public class Cstop_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 1){
-			if(cinema.containsPlayer(args[0])){
-				CinemaPlayer cp = cinema.getPlayer(args[0]);
+			if(cinema.containsCinemaPlayer(args[0])){
+				CinemaPlayer cp = cinema.getCinemaPlayer(args[0]);
 				cp.stop();
-				cinema.removePlayer(cp);
+				cinema.removeCinemaPlayer(cp);
 				sender.sendMessage("Player \""+args[0]+"\" stopped");
 				return true;
 			}else{

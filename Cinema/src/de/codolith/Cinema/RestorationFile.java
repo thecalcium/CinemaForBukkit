@@ -46,21 +46,20 @@ public class RestorationFile {
 			}*/
 			int count = raf.readInt();
 			for(int i =0; i< count; i++){
-				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
+				cinema.getCinemaPlayers().add(new CinemaPlayer(cinema, raf));
 			}
-			raf.close();
 			break;
 		case 1:
 			count = raf.readInt();
 			for(int i =0; i< count; i++){
-				cinema.getPlayers().add(new CinemaPlayer(cinema, raf));
+				cinema.getCinemaPlayers().add(new CinemaPlayer(cinema, raf));
 			}
-			raf.close();
 			break;
 		default:
 			raf.close();
 			throw new IllegalArgumentException("unknown restoration file version: "+version);
 		}
+		raf.close();
 	}
 	
 	public RestorationFile(Cinema cinema){
@@ -91,8 +90,8 @@ public class RestorationFile {
 			raf.writeUTF(reg.getPos2().getWorld().getName());
 		}*/
 		
-		raf.writeInt(cinema.getPlayerCount());
-		for(CinemaPlayer cp : cinema.getPlayers()){
+		raf.writeInt(cinema.getCinemaPlayerCount());
+		for(CinemaPlayer cp : cinema.getCinemaPlayers()){
 			cp.save(raf);		
 		}
 		raf.close();

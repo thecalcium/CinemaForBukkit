@@ -18,8 +18,8 @@ public class Cpause_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 1){
-			if(cinema.containsPlayer(args[0])){
-				CinemaPlayer cp = cinema.getPlayer(args[0]);
+			if(cinema.containsCinemaPlayer(args[0])){
+				CinemaPlayer cp = cinema.getCinemaPlayer(args[0]);
 				cp.pause();
 				sender.sendMessage("Player \""+args[0]+"\" paused");
 				return true;

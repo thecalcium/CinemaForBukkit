@@ -1,11 +1,11 @@
 package de.codolith.Cinema.Executors;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.codolith.Cinema.Cinema;
+import de.codolith.Cinema.Region;
 import de.codolith.Cinema.Version;
 
 public class Cinemainfo_Executor implements CommandExecutor{
@@ -18,7 +18,9 @@ public class Cinemainfo_Executor implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		Location pos1 = cinema.getRegion(sender).getPos1();
+		Region region = cinema.getRegion(sender);
+		sender.sendMessage(region.toString());
+		/*Location pos1 = cinema.getRegion(sender).getPos1();
 		Location pos2 = cinema.getRegion(sender).getPos2();
 		if(pos1 != null){
 			sender.sendMessage("Position 1: " + cinema.getRegion(sender).getPos1AsString());
@@ -32,7 +34,7 @@ public class Cinemainfo_Executor implements CommandExecutor{
 		}
 		if(pos1 != null && pos2 != null){
 			sender.sendMessage("Blocks currently selected: "+cinema.getRegion(sender).getBlockCount());
-		}
+		}*/
 		if(cinema.getConfig().getBoolean("Plugin.ShowApiKeyInInfo") && cinema.getConfig().contains("Plugin.ApiKey")){
 			sender.sendMessage("ApiKey: "+cinema.getConfig().getString("Plugin.ApiKey"));
 		}

@@ -17,14 +17,14 @@ public class Canimations_Executor implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if(cinema.getPlayerCount() == 0){
+		if(cinema.getCinemaPlayerCount() == 0){
 			sender.sendMessage("No Animations active");
-		}else if(cinema.getPlayerCount() == 1){
-			sender.sendMessage(cinema.getPlayerCount()+" Animation active:");
+		}else if(cinema.getCinemaPlayerCount() == 1){
+			sender.sendMessage(cinema.getCinemaPlayerCount()+" Animation active:");
 		}else{
-			sender.sendMessage(cinema.getPlayerCount()+" Animations active:");
+			sender.sendMessage(cinema.getCinemaPlayerCount()+" Animations active:");
 		}
-		for(CinemaPlayer cp : cinema.getPlayers()){
+		for(CinemaPlayer cp : cinema.getCinemaPlayers()){
 			sender.sendMessage(cp.getId());
 		}
 		return true;

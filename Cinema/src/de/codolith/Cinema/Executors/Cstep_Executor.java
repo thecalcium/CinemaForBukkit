@@ -18,8 +18,8 @@ public class Cstep_Executor implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 2){
-			if(cinema.containsPlayer(args[0])){
-				CinemaPlayer cp = cinema.getPlayer(args[0]);
+			if(cinema.containsCinemaPlayer(args[0])){
+				CinemaPlayer cp = cinema.getCinemaPlayer(args[0]);
 				if(!cp.isPaused()){
 					sender.sendMessage("The given player has to be paused for this!");
 					return true;

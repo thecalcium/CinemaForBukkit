@@ -3,6 +3,7 @@ package de.codolith.Cinema;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.codolith.Cinema.Executors.*;
@@ -20,12 +24,14 @@ public class Cinema extends JavaPlugin
 	//public static Cinema		currentInstance	= null;
 	private File				dataFolder		= new File("plugins/cinema/files");
 	private File				restorationFile	= new File("plugins/cinema/hibernate.dat");
+	private File				messagesFile	= new File("plugins/cinema/messages.yml");
 	private List<CinemaPlayer>	players			= new LinkedList<CinemaPlayer>();
 	private Logger				logger			= null;
 	private HashMap<String,Region> regions = new HashMap<String,Region>();
 	//private Region				region			= new Region();
 	private CinemaEditor		cinemaEditor	= null;
 	private VersionChecker		versionChecker	= new VersionChecker();
+	private Localizator         localizator		= new Localizator();
 
 	public Cinema()
 	{
@@ -75,6 +81,10 @@ public class Cinema extends JavaPlugin
 	{
 		return logger;
 	}
+	
+	public Localizator getLocalizator(){
+		return localizator;
+	}
 
 	@Override
 	public void onEnable()
@@ -105,9 +115,13 @@ public class Cinema extends JavaPlugin
 				logger.info("Get Cinema here: http://dev.bukkit.org/server-mods/cinema/files/");
 			}
 		}
-
-		// restore players from last time
-		restore();
+		
+		//localization
+		if(!messagesFile.exists()){
+			createMessagesFile();
+		}
+		localizator.addLocalizationSource(new YMLConfigLocalizationSource(messagesFile));
+		localizator.setLanguageCode("messages");
 
 		getCommand("cpos1").setExecutor(new Cpos1_Executor(this));
 		getCommand("cpos2").setExecutor(new Cpos2_Executor(this));
@@ -135,6 +149,18 @@ public class Cinema extends JavaPlugin
 		getCommand("cpause").setExecutor(new Cpause_Executor(this));
 		getCommand("cresume").setExecutor(new Cresume_Executor(this));
 		getCommand("cstep").setExecutor(new Cstep_Executor(this));
+		
+		// restore players from last time
+		restore();
+	}
+	
+	private void createMessagesFile(){
+		YMLConfigLocalizationSource source = new YMLConfigLocalizationSource();
+		
+		String l = "messages";
+		source.AddLabel("", l, "No Animations active");
+		
+		source.save(messagesFile);
 	}
 
 	@Override
@@ -188,7 +214,12 @@ public class Cinema extends JavaPlugin
 		if(regions.containsKey(sender.getName())){
 			retval = regions.get(sendername);
 		}else{
-			retval = new Region();
+			if(sender instanceof Player){
+				Player player = (Player) sender;
+				retval = new Region(player.getWorld());
+			}else{
+				retval = new Region(null);
+			}
 			regions.put(sendername, retval);
 		}
 		return retval;
@@ -197,7 +228,7 @@ public class Cinema extends JavaPlugin
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
-		sender.sendMessage("You shouldnt see this message O_o. this would mean a command wasnt registered properly");
+		sender.sendMessage("You shouldn't see this message O_o. This would mean a command wasn't registered properly");
 		return true;
 	}
 
@@ -211,17 +242,17 @@ public class Cinema extends JavaPlugin
 		this.cinemaEditor = cinemaEditor;
 	}
 
-	public void addPlayer(CinemaPlayer player)
+	public void addCinemaPlayer(CinemaPlayer player)
 	{
 		players.add(player);
 	}
 
-	public void removePlayer(CinemaPlayer player)
+	public void removeCinemaPlayer(CinemaPlayer player)
 	{
 		players.remove(player);
 	}
 
-	public CinemaPlayer getPlayer(String id)
+	public CinemaPlayer getCinemaPlayer(String id)
 	{
 		for (CinemaPlayer cp : players)
 		{
@@ -233,7 +264,7 @@ public class Cinema extends JavaPlugin
 		return null;
 	}
 
-	public boolean containsPlayer(String id)
+	public boolean containsCinemaPlayer(String id)
 	{
 		for (CinemaPlayer cp : players)
 		{
@@ -245,12 +276,12 @@ public class Cinema extends JavaPlugin
 		return false;
 	}
 
-	public int getPlayerCount()
+	public int getCinemaPlayerCount()
 	{
 		return players.size();
 	}
 
-	public List<CinemaPlayer> getPlayers()
+	public List<CinemaPlayer> getCinemaPlayers()
 	{
 		return players;
 	}
