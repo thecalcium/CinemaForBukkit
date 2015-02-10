@@ -59,14 +59,14 @@ public class Cplayworld_Executor implements CommandExecutor{
 			int frameDuration = 250;
 			if(args.length>6){
 				try{
-					frameDuration = Integer.parseInt(args[2]);
+					frameDuration = Integer.parseInt(args[6]);
 				}catch(NumberFormatException nfe){
 					sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"framedurationInMillis"));
 					return true;
 				}
 				if(args.length>7){
 					try{
-						playCount = Integer.parseInt(args[3]);
+						playCount = Integer.parseInt(args[7]);
 					}catch(NumberFormatException nfe){
 						sender.sendMessage(String.format(cinema.getMessage(Messages.invalid_value_for_param_X),"playcount"));
 						return true;
