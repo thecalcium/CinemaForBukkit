@@ -1,0 +1,138 @@
+name: Cinema
+main: de.codolith.Cinema.Cinema
+version: ${version}
+permissions:
+   Cinema.basic:
+      description: gives access to the cinema plugin
+      default: op
+commands:
+   cpos1:
+      description: Sets the first position to the position of the player, or to the provided x, y and z. If used by console you have to specify the world too
+      usage: /cpos1 [x] [y] [z] [[worldname]]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cpos2:
+      description: Sets the second position to the position of the player, or to the provided x, y and z. If used by console you have to specify the world too
+      usage: /cpos2 [x] [y] [z] [[worldname]]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   csave:
+      description: Saves the frame marked by the two positions to the given file. If the file does not exist it will be created. Optionally you can specify the frame index to save to (will overwrite). If you specify an index pointing to a frame outside of the animation, the frame will be saved as if you didn't specify an index(e.g. index 1000 for an animation with 100 frames, will save as frame 100 (the 101st frame in the animation)). /csave test 0 saves as first frame in file "test"
+      usage: /csave <filename> [framenumber]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   csavedelta:
+      description: Saves the frame marked by the two positions to the given file as Delta Frame. If the file does not exist it will be created. Optionally you can specify the frame index to save to (will overwrite). If you specify an index pointing to a frame outside of the animation, the frame will be saved as if you didn't specify an index(e.g. index 1000 for an animation with 100 frames, will save as frame 100 (the 101st frame in the animation)). /csave test 0 saves as first frame in file "test". Delta means it saves just the differences from the previous frame
+      usage: /csavedelta <filename> [framenumber]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinsert:
+      description: Inserts the frame marked by the two positions into the given file. Negative indices are allowed. -1 would insert before the last frame. Can lead to unwated results if used with delta frames
+      usage: /cinsert <filename> <framenumber>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinsertdelta:
+      description: Inserts the frame marked by the two positions into the given file as Delta Frame. Negative indices are allowed. -1 would insert before the last frame. Can lead to unwated results if used with delta frames
+      usage: /cinsertdelta <filename> <framenumber>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cplay:
+      description: Plays the given file. it plays under the ID (can be a number or a text without spaces). frame duration in milliseconds is the amount of time between each framechange. Don't set it too low, it could result in serverlags and major cpu usage.
+      usage: /cplay <ID> <filename> [framedurationInMillis=250] [playcount=0]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cplayworld:
+      description: Plays the given file like /cplay in a given world at a given position.
+      usage: /cplayworld <ID> <filename> <x> <y> <z> <world> [framedurationInMillis=250] [playcount=0]
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cpause:
+      description: Pauses the given cinemaplayer(ID you used at cplay)
+      usage: /cpause <ID>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cstop:
+      description: Stops the given cinemaplayer(ID you used at cplay)
+      usage: /cstop <ID>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cresume:
+      description: Resumes the given cinemaplayers(IDs you used at cplay). for example "/cresume test mine stupid" will resume the 3 players test, mine and stupid
+      usage: /cresume <...>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cstep:
+      description: steps the given cinemaplayer(ID you used at cplay). -1 goes one frame back, 1 goes one frame forward. this works only when paused!!!
+      usage: /cstep <ID> <count>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemainfo:
+      description: Shows Position one and two and the version of this Plugin. Also notifies you if there is a new version available
+      usage: /cinemainfo
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   canimations:
+      description: Shows all active animations
+      usage: /canimations
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemaremove:
+      description: Deletes an animation file with the given name
+      usage: /cinemaremove <filename>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditopen:
+      description: Opens a cinema animation for editing
+      usage: /ceditopen <filename>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditremove:
+      description: Removes the frame at position "index". the first frame has index 0
+      usage: /ceditremove <index>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditreverse:
+      description: Reverses the loaded animation
+      usage: /ceditreverse
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditsave:
+      description: Saves the cinema animation
+      usage: /ceditsave
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditclose:
+      description: Closes the cinemaeditor without saving. Unsaved changes to the animation will be lost
+      usage: /ceditclose
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditinfo:
+      description: Tells what file is loaded in the editor
+      usage: /ceditinfo
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   ceditshow:
+      description: Shows the frame at position "index" in the animation (can't be reverted)
+      usage: /ceditshow <index>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemagif:
+      description: Converts a .gif animation (or any picture) to a cinema animation (normal pictures would result in only one frame). alignments can be looked up with the command /cinemagifalignments
+      usage: /cinemagif <inputfile> <outputname> <alignment(see /cinemagifalignments)>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   cinemagifalignments:
+      description: Lists all available alignments
+      usage: /cinemagifalignments
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   creverse:
+      description: Reverses the given player
+      usage: /creverse <ID>
+      permission: Cinema.basic
+      permission-message: You don't have permission
+   csetapikey:
+      description: Sets the api key for the version check. Leave key empty to remove the api key
+      usage: /csetapikey <key>
+      permission: Cinema.basic
+      permission-message: You don't have permission

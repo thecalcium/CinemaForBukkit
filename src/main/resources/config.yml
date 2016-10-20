@@ -1,0 +1,3 @@
+Plugin:
+   CheckForNewVersion: True
+   ShowApiKeyInInfo: False
